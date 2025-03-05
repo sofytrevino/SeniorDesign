@@ -103,7 +103,8 @@ class Record:
 
         #loop through self.input and call corresponding functions in Search Record
 
-
+    def process(self):
+        return self.searcher.replace_phi()
         
 
 
