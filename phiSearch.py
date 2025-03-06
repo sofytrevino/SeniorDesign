@@ -87,16 +87,16 @@ class SearchRecord:
         dateOfBirthCount = 0
         try:
             with open(self.record, 'r+') as file:
-                #first find the name we will be looking for
+                #first find the date of birth we will be looking for
                 keyword = False
                 for line in file:
                     for word in line.split():
-                        if(word == "Date of Birth:" | word == 'DoB:' | word == 'dob:'):
+                        if(word == "Date of Birth:" | word == 'date of birth:'  | word == 'DoB:' | word == 'dob:'):
                             keyword = True
                         elif keyword == True:
                             keyword = False
                             DoB = word
-                            print(Name)
+                            print(DoB)
                 
                 #loop through remainder of file and replace and count occurances that equal to Date Of Birth
                 token = "*dob*"
@@ -120,7 +120,40 @@ class SearchRecord:
 
     
     #def socialNum(self):
+        def socialNum(self):
+        socialNumCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the social security number we will be looking for
+                keyword = False
+                for line in file:
+                    for word in line.split():
+                        if(word == "Social Security Number:" | word == 'Social Secuirty:' | word == 'social security number:'  | word == 'social security:' | word == 'SSN:' | word == 'ssn:'):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            SSN = word
+                            print(SSN)
+                
+                #loop through remainder of file and replace and count occurances that equal to Social Security Number
+                token = "*ssn*"
+                index = 0
+                line = file.readlines()
+                for word in line:
+                    if word == SSN:
+                        socialNumCount+= 1
+                        replacement = line.replace(word, token)
+                        line[index] = replacement
+                    index += 1
+                file.truncate(0)
+                file.writelines(line)
+                file.close()
 
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.input}' not found.")
+        
+        return socialNumCount
 
     #def phoneNum(self):
 
@@ -130,7 +163,7 @@ class SearchRecord:
         emailCount = 0
         try:
             with open(self.record, 'r+') as file:
-                #first find the name we will be looking for
+                #first find the email we will be looking for
                 keyword = False
                 for line in file:
                     for word in line.split():
