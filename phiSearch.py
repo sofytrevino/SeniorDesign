@@ -86,12 +86,76 @@ class SearchRecord:
 
     
     #def socialNum(self):
+    def socialNum(self):
+        socialNumCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the name we will be looking for
+                keyword = False
+                for line in file:
+                    for word in line.split():
+                        if(word == "Social Security Number:" | word == 'SSN:'):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            SocialNum = word
+                            print(SocialNum)
+                
+                #loop through remainder of file and replace and count occurances that equal to Name
+                token = "*ssn*"
+                index = 0
+                line = file.readlines()
+                for word in line:
+                    if word == SocialNum:
+                        socialNumCount+= 1
+                        replacement = line.replace(word, token)
+                        line[index] = replacement
+                    index += 1
+                file.truncate(0)
+                file.writelines(line)
+                file.close()
+        except FileNotFoundError:
+            print(f"Error: File '{self.input}' not found.")
+        
+        return socialNumCount
 
 
     #def phoneNum(self):
 
 
     #def email(self):
+    def email(self):
+        emailCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the name we will be looking for
+                keyword = False
+                for line in file:
+                    for word in line.split():
+                        if(word == "Email address:" | word == 'email:' | word == "Email Address:"  | word == "email address:" ):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            Email = word
+                            print(Email)
+                
+                #loop through remainder of file and replace and count occurances that equal to Name
+                token = "*ssn*"
+                index = 0
+                line = file.readlines()
+                for word in line:
+                    if word == Email:
+                        emailCount+= 1
+                        replacement = line.replace(word, token)
+                        line[index] = replacement
+                    index += 1
+                file.truncate(0)
+                file.writelines(line)
+                file.close()
+        except FileNotFoundError:
+            print(f"Error: File '{self.input}' not found.")
+        
+        return emailCount
 
 
 
