@@ -120,7 +120,7 @@ class SearchRecord:
 
     
     #def socialNum(self):
-        def socialNum(self):
+    def socialNum(self):
         socialNumCount = 0
         try:
             with open(self.record, 'r+') as file:
@@ -156,7 +156,7 @@ class SearchRecord:
         return socialNumCount
 
     #def phoneNum(self):
-        def phoneNum(self):
+    def phoneNum(self):
         phoneNumCount = 0
         try:
             with open(self.record, 'r+') as file:
