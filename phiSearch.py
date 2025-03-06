@@ -83,6 +83,40 @@ class SearchRecord:
 
 
     #def dateOfBirth(self):
+    def dateOfBirth(self):
+        dateOfBirthCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the name we will be looking for
+                keyword = False
+                for line in file:
+                    for word in line.split():
+                        if(word == "Date of Birth:" | word == 'DoB:'):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            Name = word
+                            print(Name)
+                
+                #loop through remainder of file and replace and count occurances that equal to Date Of Birth
+                token = "*dob*"
+                index = 0
+                line = file.readlines()
+                for word in line:
+                    if word == Name:
+                        nameCount+= 1
+                        replacement = line.replace(word, token)
+                        line[index] = replacement
+                    index += 1
+                file.truncate(0)
+                file.writelines(line)
+                file.close()
+
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.input}' not found.")
+        
+        return dateOfBirthCount
 
     
     #def socialNum(self):
