@@ -138,7 +138,8 @@ class Record:
     def process(self):
         return self.searcher.replace_phi()
 
-
+    def process(self):
+        return self.searcher.replace_phi()
         
 
 
