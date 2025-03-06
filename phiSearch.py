@@ -91,7 +91,7 @@ class SearchRecord:
                 keyword = False
                 for line in file:
                     for word in line.split():
-                        if(word == "Date of Birth:" | word == 'DoB:'):
+                        if(word == "Date of Birth:" | word == 'DoB:' | word == 'dob:'):
                             keyword = True
                         elif keyword == True:
                             keyword = False
