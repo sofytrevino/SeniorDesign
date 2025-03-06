@@ -156,7 +156,40 @@ class SearchRecord:
         return socialNumCount
 
     #def phoneNum(self):
+        def phoneNum(self):
+        phoneNumCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the phone number we will be looking for
+                keyword = False
+                for line in file:
+                    for word in line.split():
+                        if(word == "Phone Number:" | word == 'phone number:' | word == 'Phone:' | word == 'phone:'):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            Phone = word
+                            print(SSN)
+                
+                #loop through remainder of file and replace and count occurances that equal to Phone Number
+                token = "*phone*"
+                index = 0
+                line = file.readlines()
+                for word in line:
+                    if word == Phone:
+                        phoneNumCount+= 1
+                        replacement = line.replace(word, token)
+                        line[index] = replacement
+                    index += 1
+                file.truncate(0)
+                file.writelines(line)
+                file.close()
 
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.input}' not found.")
+        
+        return phoneNumCount
 
     #def email(self):
     def email(self):
@@ -187,6 +220,8 @@ class SearchRecord:
                 file.truncate(0)
                 file.writelines(line)
                 file.close()
+
+        
         except FileNotFoundError:
             print(f"Error: File '{self.input}' not found.")
         
