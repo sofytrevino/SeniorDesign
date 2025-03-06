@@ -95,7 +95,7 @@ class SearchRecord:
                             keyword = True
                         elif keyword == True:
                             keyword = False
-                            Name = word
+                            DoB = word
                             print(Name)
                 
                 #loop through remainder of file and replace and count occurances that equal to Date Of Birth
@@ -103,8 +103,8 @@ class SearchRecord:
                 index = 0
                 line = file.readlines()
                 for word in line:
-                    if word == Name:
-                        nameCount+= 1
+                    if word == DoB:
+                        dateOfBirthCount+= 1
                         replacement = line.replace(word, token)
                         line[index] = replacement
                     index += 1
@@ -141,7 +141,7 @@ class SearchRecord:
                             Email = word
                             print(Email)
                 
-                #loop through remainder of file and replace and count occurances that equal to Name
+                #loop through remainder of file and replace and count occurances that equal to Email
                 token = "*email*"
                 index = 0
                 line = file.readlines()
