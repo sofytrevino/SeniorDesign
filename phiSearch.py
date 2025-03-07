@@ -232,17 +232,56 @@ class SearchRecord:
 
 #Record takes in the input list of PHI and addresses the necessary search functions
 class Record:
-    def _init__(self, input):
-        self.input = input
-        self.algorithm = SearchRecord
+    def _init__(self, phi_list, record_file):
+        self.phi_list = phi_list
+        self.record_file = record_file
+
+         
+        self.replacement_tags = {#Dictionary mapping PHI items to their corresponding replacement tags
+            "Name": "*name*",
+            "Address": "*address*",
+            "Date of birth": "*dob*",
+            "Social Security number": "*ssn*",
+            "Phone number": "*phone*",
+            "Email address": "*email*"
+        }
 
         #loop through self.input and call corresponding functions in Search Record
         #rajfryy authored:
-    def process(self):
-        return self.searcher.replace_phi()
-
-    def process(self):
-        return self.searcher.replace_phi()
+    def replace_phi(self):
+        """
+        Reads the record file, searches for PHI data, and replaces it with the corresponding tags.
+        Saves the modified content back to the file.
+        """
+        try:
+            # Read the file content
+            with open(self.record_file, 'r') as file:
+                content = file.readlines()
+            
+            # Process each line in the file
+            updated_content = []
+            for line in content:
+                updated_line = line
+                
+                # Replace each PHI instance with its tag
+                for phi_item in self.phi_list:
+                    if phi_item in self.replacement_tags:
+                        # Use regex to match the PHI item value following the keyword
+                        pattern = rf"({phi_item}:\s*)(.+)"
+                        updated_line = re.sub(pattern, lambda m: m.group(1) + self.replacement_tags[phi_item], updated_line)
+                
+                updated_content.append(updated_line)
+            
+            # Write the modified content back to the file
+            with open(self.record_file, 'w') as file:
+                file.writelines(updated_content)
+            
+            print("PHI data replaced successfully in the record file.")
+        
+        except FileNotFoundError:
+            print(f"Error: File '{self.record_file}' not found.")
+        except Exception as e:
+            print(f"Error: {e}")
         
 
 
