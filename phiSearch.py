@@ -227,6 +227,46 @@ class SearchRecord:
             print(f"Error: File '{self.input}' not found.")
         
         return emailCount
+    
+    #def address(self):
+    def address(self):
+        addressCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the address we will be looking for
+                keyword = False
+                for line in file:
+                    for word in line.split():
+                        if(word == "Address:" | word == 'address:'):
+                            keyword = True
+                            Address = word
+                        elif keyword == True:
+                            keyword = False
+                            #add the following words after address to the address String object
+                            if (Address != "Address " | Address != "address "):
+                                Address += " "
+                                Address += word
+                            print(Address)
+                
+                #loop through remainder of file and replace and count occurances that equal to Email
+                token = "*address*"
+                index = 0
+                line = file.readlines()
+                for word in line:
+                    if word == Address:
+                        addressCount+= 1
+                        replacement = line.replace(word, token)
+                        line[index] = replacement
+                    index += 1
+                file.truncate(0)
+                file.writelines(line)
+                file.close()
+
+        
+        except FileNotFoundError:
+            print(f"Error: File '{self.input}' not found.")
+        
+        return addressCount
 
 
 
