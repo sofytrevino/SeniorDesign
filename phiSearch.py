@@ -1,9 +1,5 @@
-#phiSearch.py
-#command line: python phiSearch.py phi1.txt ehr JMS.txt
-
 import sys
 import re
-
 
 
 #Parsing class should read inputFile and see what information it needs to search
@@ -40,226 +36,89 @@ class Parsing(object):
 #SearchRecord should keep track of the occurances of the found PHI in the record file passed in
 class SearchRecord:
 
-    def __init__(self, info, record):
-        self.info = info
+    def __init__(self, record):
+        #self.info = info
         self.record = record
 
 
     #functions should return the number of occurances found of each type
 
-    def names(self):
+    def name(self):
         nameCount = 0
         try:
             with open(self.record, 'r+') as file:
                 #first find the name we will be looking for
                 keyword = False
-                for line in file:
-                    for word in line.split():
-                        if(word == "Patient:" | word == 'Name:'):
+                Name = ""
+                lines = file.readlines()
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if(word == "Patient:" or word == "Name:"):
                             keyword = True
-                        elif keyword == True:
+                        elif keyword:
                             keyword = False
-                            Name = word
+                            Name = word.strip()
                             print(Name)
+                            break
                 
                 #loop through remainder of file and replace and count occurances that equal to Name
-                token = "*name*"
-                index = 0
-                line = file.readlines()
-                for word in line:
-                    if word == Name:
-                        nameCount+= 1
-                        replacement = line.replace(word, token)
-                        line[index] = replacement
-                    index += 1
-                file.truncate(0)
-                file.writelines(line)
+                if Name != "":
+                    token = "*name*"
+                    updated_lines = []
+                    for line in lines:
+                        occurences =  line.count(Name)
+                        if occurences > 0:
+                            nameCount += occurences
+                            line = line.replace(Name, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(updated_lines)
                 file.close()
 
-
         except FileNotFoundError:
-            print(f"Error: File '{self.input}' not found.")
+            print(f"Error: File '{self.record}' not found.")
         
         return nameCount
 
-
-    #def dateOfBirth(self):
-    def dateOfBirth(self):
-        dateOfBirthCount = 0
-        try:
-            with open(self.record, 'r+') as file:
-                #first find the date of birth we will be looking for
-                keyword = False
-                for line in file:
-                    for word in line.split():
-                        if(word == "Date of Birth:" | word == 'date of birth:'  | word == 'DoB:' | word == 'dob:'):
-                            keyword = True
-                        elif keyword == True:
-                            keyword = False
-                            DoB = word
-                            print(DoB)
-                
-                #loop through remainder of file and replace and count occurances that equal to Date Of Birth
-                token = "*dob*"
-                index = 0
-                line = file.readlines()
-                for word in line:
-                    if word == DoB:
-                        dateOfBirthCount+= 1
-                        replacement = line.replace(word, token)
-                        line[index] = replacement
-                    index += 1
-                file.truncate(0)
-                file.writelines(line)
-                file.close()
-
-
-        except FileNotFoundError:
-            print(f"Error: File '{self.input}' not found.")
-        
-        return dateOfBirthCount
-
-    
-    #def socialNum(self):
-    def socialNum(self):
-        socialNumCount = 0
-        try:
-            with open(self.record, 'r+') as file:
-                #first find the social security number we will be looking for
-                keyword = False
-                for line in file:
-                    for word in line.split():
-                        if(word == "Social Security Number:" | word == 'Social Secuirty:' | word == 'social security number:'  | word == 'social security:' | word == 'SSN:' | word == 'ssn:'):
-                            keyword = True
-                        elif keyword == True:
-                            keyword = False
-                            SSN = word
-                            print(SSN)
-                
-                #loop through remainder of file and replace and count occurances that equal to Social Security Number
-                token = "*ssn*"
-                index = 0
-                line = file.readlines()
-                for word in line:
-                    if word == SSN:
-                        socialNumCount+= 1
-                        replacement = line.replace(word, token)
-                        line[index] = replacement
-                    index += 1
-                file.truncate(0)
-                file.writelines(line)
-                file.close()
-
-
-        except FileNotFoundError:
-            print(f"Error: File '{self.input}' not found.")
-        
-        return socialNumCount
-
-    #def phoneNum(self):
-    def phoneNum(self):
-        phoneNumCount = 0
-        try:
-            with open(self.record, 'r+') as file:
-                #first find the phone number we will be looking for
-                keyword = False
-                for line in file:
-                    for word in line.split():
-                        if(word == "Phone Number:" | word == 'phone number:' | word == 'Phone:' | word == 'phone:'):
-                            keyword = True
-                        elif keyword == True:
-                            keyword = False
-                            Phone = word
-                            print(SSN)
-                
-                #loop through remainder of file and replace and count occurances that equal to Phone Number
-                token = "*phone*"
-                index = 0
-                line = file.readlines()
-                for word in line:
-                    if word == Phone:
-                        phoneNumCount+= 1
-                        replacement = line.replace(word, token)
-                        line[index] = replacement
-                    index += 1
-                file.truncate(0)
-                file.writelines(line)
-                file.close()
-
-
-        except FileNotFoundError:
-            print(f"Error: File '{self.input}' not found.")
-        
-        return phoneNumCount
-
-    #def email(self):
-    def email(self):
-        emailCount = 0
-        try:
-            with open(self.record, 'r+') as file:
-                #first find the email we will be looking for
-                keyword = False
-                for line in file:
-                    for word in line.split():
-                        if(word == "Email address:" | word == 'email:' | word == "Email Address:"  | word == "email address:" ):
-                            keyword = True
-                        elif keyword == True:
-                            keyword = False
-                            Email = word
-                            print(Email)
-                
-                #loop through remainder of file and replace and count occurances that equal to Email
-                token = "*email*"
-                index = 0
-                line = file.readlines()
-                for word in line:
-                    if word == Email:
-                        emailCount+= 1
-                        replacement = line.replace(word, token)
-                        line[index] = replacement
-                    index += 1
-                file.truncate(0)
-                file.writelines(line)
-                file.close()
-
-        
-        except FileNotFoundError:
-            print(f"Error: File '{self.input}' not found.")
-        
-        return emailCount
-    
     #def address(self):
     def address(self):
         addressCount = 0
         try:
             with open(self.record, 'r+') as file:
                 #first find the address we will be looking for
+                lines = file.readlines()
                 keyword = False
-                for line in file:
-                    for word in line.split():
-                        if(word == "Address:" | word == 'address:'):
+                Address = ""
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if(word == "Address:" or word == 'address:'):
                             keyword = True
                             Address = word
                         elif keyword == True:
                             keyword = False
                             #add the following words after address to the address String object
-                            if (Address != "Address " | Address != "address "):
+                            if (Address != "Address " or Address != "address "):
                                 Address += " "
                                 Address += word
                             print(Address)
+                            break
                 
                 #loop through remainder of file and replace and count occurances that equal to Email
-                token = "*address*"
-                index = 0
-                line = file.readlines()
-                for word in line:
-                    if word == Address:
-                        addressCount+= 1
-                        replacement = line.replace(word, token)
-                        line[index] = replacement
-                    index += 1
-                file.truncate(0)
-                file.writelines(line)
+                if Address != "":
+                    token = "*address*"
+                    updated_lines = []
+                    for line in lines:
+                        occurrences = line.count(Address)
+                        if occurrences > 0:
+                            addressCount+= 1
+                            line = line.replace(Address, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(line)
                 file.close()
 
         
@@ -268,67 +127,220 @@ class SearchRecord:
         
         return addressCount
 
+    #def dateOfBirth(self):
+    def dateOfBirth(self):
+        #print("finding date of birth")
+        dateOfBirthCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the date of birth we will be looking for
+                lines = file.readlines()
+                keyword = False
+                DoB = ""
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if(word == "Date of Birth:" or word == 'date of birth:' or word == 'DoB:' or word == 'dob:'):
+                            keyword = True
+                        elif keyword == True:
+                            DoB = word.strip()
+                            keyword = False
+                            print(DoB)
+                            break
+                
+                #loop through remainder of file and replace and count occurances that equal to Date Of Birth
+                if DoB != "":
+                    token = "*dob*"
+                    updated_lines = []
+                    for line in lines:
+                        occurences = line.count(DoB)
+                        if occurences > 0:
+                            dateOfBirthCount+= 1
+                            line = line.replace(DoB, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(line)
+                file.close()
+
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        
+        return dateOfBirthCount
+
+    
+    #def socialNum(self):
+    def socialNum(self):
+        #print("finding social num")
+        socialNumCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the social security number we will be looking for
+                lines = file.readlines()
+                keyword = False
+                SSN = ""
+                for line in lines:
+                    words =  line.split()
+                    for word in words:
+                        if(word == "Social Security Number:" or word == 'Social Secuirty:' or word == 'social security number:' or word == 'social security:' or word == 'SSN:' or word == 'ssn:'):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            SSN = word.strip()
+                            print(SSN)
+                            break
+
+                
+                #loop through remainder of file and replace and count occurances that equal to Social Security Number
+                if SSN != "":
+                    token = "*ssn*"
+                    updated_lines = []
+                    for line in lines:
+                        occurrences = line.count(SSN)
+                        if occurrences > 0:
+                            socialNumCount+= 1
+                            line = line.replace(SSN, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(line)
+                file.close()
+
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        
+        return socialNumCount
+
+    #def phoneNum(self):
+    def phoneNum(self):
+        #print("finding phone Num")
+        phoneNumCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the phone number we will be looking for
+                lines = file.readlines()
+                keyword = False
+                Phone = ""
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if(word == "Phone Number:" or word == 'phone number:' or word == 'Phone:' or word == 'phone:'):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            Phone = word.strip()
+                            print(Phone)
+                            break
+                
+                #loop through remainder of file and replace and count occurances that equal to Phone Number
+                if Phone != "":
+                    token = "*phone*"
+                    updated_lines = []
+                    for line in lines:
+                        occurrences = line.count(Phone)
+                        if occurrences > 0:
+                            phoneNumCount+= 1
+                            line = line.replace(Phone, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(line)
+                file.close()
+
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        
+        return phoneNumCount
+
+    #def email(self):
+    def email(self):
+        #print("finding email")
+        emailCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the email we will be looking for
+                lines = file.readlines()
+                keyword = False
+                Email = ""
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if(word == "Email address:" or word == 'email:' or word == "Email Address:"  or word == "email address:" ):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            Email = word.strip()
+                            print(Email)
+                            break
+               
+                #loop through remainder of file and replace and count occurances that equal to Email
+                if Email != "":
+                    token = "*email*"
+                    updated_lines = []
+                    for line in lines:
+                        occurrences = line.count(Email)
+                        if occurrences > 0:
+                            emailCount+= 1
+                            line = line.replace(Email, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(line)
+                file.close()
+
+        
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        
+        return emailCount
+
 
 
 #Record takes in the input list of PHI and addresses the necessary search functions
-class Record:
-    def _init__(self, phi_list, record_file):
-        self.phi_list = phi_list
-        self.record_file = record_file
+class Record(object):
+    def __init__(self, input, outputFile):
+        self.input = input
+        self.algorithm = SearchRecord(outputFile)
 
-         
-        self.replacement_tags = {#Dictionary mapping PHI items to their corresponding replacement tags
-            "Name": "*name*",
-            "Address": "*address*",
-            "Date of birth": "*dob*",
-            "Social Security number": "*ssn*",
-            "Phone number": "*phone*",
-            "Email address": "*email*"
-        }
-
+    def find(self):
+        inputs = self.input
+        counts = []
         #loop through self.input and call corresponding functions in Search Record
-        #rajfryy authored:
-    def replace_phi(self):
-        """
-        Reads the record file, searches for PHI data, and replaces it with the corresponding tags.
-        Saves the modified content back to the file.
-        """
-        try:
-            # Read the file content
-            with open(self.record_file, 'r') as file:
-                content = file.readlines()
-            
-            # Process each line in the file
-            updated_content = []
-            for line in content:
-                updated_line = line
-                
-                # Replace each PHI instance with its tag
-                for phi_item in self.phi_list:
-                    if phi_item in self.replacement_tags:
-                        # Use regex to match the PHI item value following the keyword
-                        pattern = rf"({phi_item}:\s*)(.+)"
-                        updated_line = re.sub(pattern, lambda m: m.group(1) + self.replacement_tags[phi_item], updated_line)
-                
-                updated_content.append(updated_line)
-            
-            # Write the modified content back to the file
-            with open(self.record_file, 'w') as file:
-                file.writelines(updated_content)
-            
-            print("PHI data replaced successfully in the record file.")
-        
-        except FileNotFoundError:
-            print(f"Error: File '{self.record_file}' not found.")
-        except Exception as e:
-            print(f"Error: {e}")
+        print("inputs: ", inputs)
+        for info in inputs:
+            if "Name" in info:
+                #print("record name")
+                names = self.algorithm.name()
+                counts.append(names)
+            elif "Address" in info:
+                #print("record address")
+                address = self.algorithm.address()
+                counts.append(address)
+            elif "Date" in info:
+                #print("record date")
+                date = self.algorithm.dateOfBirth()
+                counts.append(date)
+            elif "Social" in info:
+                #print("record social")
+                social = self.algorithm.socialNum()
+                counts.append(social)
+            elif "Phone" in info:
+                #print("record phone")
+                phone = self.algorithm.phoneNum()
+                counts.append(phone)
+            elif "Email" in info:
+                #print("record email")
+                email = self.algorithm.email()
+                counts.append(email)
+        return counts
+
         
 
 
 def main():
-    #test main
-    #data = "hello"
-    #print(data)
 
     #ensure command-line arguments
     if len(sys.argv) < 3:
@@ -339,12 +351,10 @@ def main():
 
     parseInfo = Parsing(inputFile)
     infoList = parseInfo.parse()
-    search = Record(infoList)
+    search = Record(infoList, recordFile)
+    found = search.find()
+    print("final count: ", found)
 
    
 if __name__ == "__main__":
     main()
-
-
-
-
