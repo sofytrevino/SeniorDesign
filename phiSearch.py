@@ -2,6 +2,7 @@
 #command line: python phiSearch.py phi1.txt ehr JMS.txt
 
 import sys
+import re
 
 
 
