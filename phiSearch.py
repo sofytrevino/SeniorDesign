@@ -1,3 +1,6 @@
+#phiSearch.py
+#command line: python phiSearch.py phi1.txt JMS.txt
+
 import sys
 import re
 
@@ -75,7 +78,7 @@ class SearchRecord:
                     file.seek(0)
                     file.truncate(0)
                     file.writelines(updated_lines)
-                file.close()
+            
 
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
@@ -96,13 +99,14 @@ class SearchRecord:
                     for word in words:
                         if(word == "Address:" or word == 'address:'):
                             keyword = True
-                            Address = word
+                            #Address = word
                         elif keyword == True:
                             keyword = False
                             #add the following words after address to the address String object
-                            if (Address != "Address " or Address != "address "):
+                            """if (Address != "Address " or Address != "address "):
                                 Address += " "
-                                Address += word
+                                Address += word"""
+                            Address = " ".join(words)
                             print(Address)
                             break
                 
@@ -118,8 +122,8 @@ class SearchRecord:
                         updated_lines.append(line)
                     file.seek(0)
                     file.truncate(0)
-                    file.writelines(line)
-                file.close()
+                    file.writelines(updated_lines)
+            
 
         
         except FileNotFoundError:
@@ -140,7 +144,8 @@ class SearchRecord:
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        if(word == "Date of Birth:" or word == 'date of birth:' or word == 'DoB:' or word == 'dob:'):
+                        #print("word: ", word)
+                        if(word == "Date of Birth:" or word == 'date of birth:' or word == 'DoB:' or word == 'dob:' or word == "Birth:"):
                             keyword = True
                         elif keyword == True:
                             DoB = word.strip()
@@ -150,7 +155,7 @@ class SearchRecord:
                 
                 #loop through remainder of file and replace and count occurances that equal to Date Of Birth
                 if DoB != "":
-                    token = "*dob*"
+                    token = "*DoB*"
                     updated_lines = []
                     for line in lines:
                         occurences = line.count(DoB)
@@ -160,8 +165,8 @@ class SearchRecord:
                         updated_lines.append(line)
                     file.seek(0)
                     file.truncate(0)
-                    file.writelines(line)
-                file.close()
+                    file.writelines(updated_lines)
+            file.close()
 
 
         except FileNotFoundError:
@@ -183,7 +188,7 @@ class SearchRecord:
                 for line in lines:
                     words =  line.split()
                     for word in words:
-                        if(word == "Social Security Number:" or word == 'Social Secuirty:' or word == 'social security number:' or word == 'social security:' or word == 'SSN:' or word == 'ssn:'):
+                        if(word == "Social Security Number:" or word == 'Social Secuirty:' or word == 'social security number:' or word == 'social security:' or word == 'SSN:' or word == 'ssn:' or word == "Number:"):
                             keyword = True
                         elif keyword == True:
                             keyword = False
@@ -194,7 +199,7 @@ class SearchRecord:
                 
                 #loop through remainder of file and replace and count occurances that equal to Social Security Number
                 if SSN != "":
-                    token = "*ssn*"
+                    token = "*SSN*"
                     updated_lines = []
                     for line in lines:
                         occurrences = line.count(SSN)
@@ -204,8 +209,8 @@ class SearchRecord:
                         updated_lines.append(line)
                     file.seek(0)
                     file.truncate(0)
-                    file.writelines(line)
-                file.close()
+                    file.writelines(updated_lines)
+            file.close()
 
 
         except FileNotFoundError:
@@ -230,7 +235,7 @@ class SearchRecord:
                             keyword = True
                         elif keyword == True:
                             keyword = False
-                            Phone = word.strip()
+                            Phone = word
                             print(Phone)
                             break
                 
@@ -246,8 +251,8 @@ class SearchRecord:
                         updated_lines.append(line)
                     file.seek(0)
                     file.truncate(0)
-                    file.writelines(line)
-                file.close()
+                    file.writelines(updated_lines)
+            file.close()
 
 
         except FileNotFoundError:
@@ -288,7 +293,7 @@ class SearchRecord:
                         updated_lines.append(line)
                     file.seek(0)
                     file.truncate(0)
-                    file.writelines(line)
+                    file.writelines(updated_lines)
                 file.close()
 
         
@@ -327,7 +332,7 @@ class Record(object):
                 #print("record social")
                 social = self.algorithm.socialNum()
                 counts.append(social)
-            elif "Phone" in info:
+            if "Phone" in info:
                 #print("record phone")
                 phone = self.algorithm.phoneNum()
                 counts.append(phone)
