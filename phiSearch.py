@@ -42,7 +42,7 @@ class SearchRecord:
     def __init__(self, record):
         #self.info = info
         self.record = record
-
+        self.outputFile = "JMS1.txt"
 
     #functions should return the number of occurances found of each type
 
@@ -66,19 +66,20 @@ class SearchRecord:
                             break
                 
                 #loop through remainder of file and replace and count occurances that equal to Name
-                if Name != "":
-                    token = "*name*"
-                    updated_lines = []
-                    for line in lines:
-                        occurences =  line.count(Name)
-                        if occurences > 0:
-                            nameCount += occurences
-                            line = line.replace(Name, token)
-                        updated_lines.append(line)
-                    file.seek(0)
-                    file.truncate(0)
-                    file.writelines(updated_lines)
-            
+                with open(self.outputFile, 'w+') as file2:
+                    if Name != "":
+                        token = "*name*"
+                        updated_lines = []
+                        for line in lines:
+                            occurences =  line.count(Name)
+                            if occurences > 0:
+                                nameCount += occurences
+                                line = line.replace(Name, token)
+                            updated_lines.append(line)
+                        file2.seek(0)
+                        file2.truncate(0)
+                        file2.writelines(updated_lines)
+
 
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
@@ -111,18 +112,19 @@ class SearchRecord:
                             break
                 
                 #loop through remainder of file and replace and count occurances that equal to Email
-                if Address != "":
-                    token = "*address*"
-                    updated_lines = []
-                    for line in lines:
-                        occurrences = line.count(Address)
-                        if occurrences > 0:
-                            addressCount+= 1
-                            line = line.replace(Address, token)
-                        updated_lines.append(line)
-                    file.seek(0)
-                    file.truncate(0)
-                    file.writelines(updated_lines)
+                with open(self.outputFile, 'w+') as file2:
+                    if Address != "":
+                        token = "*address*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(Address)
+                            if occurrences > 0:
+                                addressCount+= 1
+                                line = line.replace(Address, token)
+                            updated_lines.append(line)
+                        file2.seek(0)
+                        file2.truncate(0)
+                        file2.writelines(updated_lines)
             
 
         
@@ -154,19 +156,19 @@ class SearchRecord:
                             break
                 
                 #loop through remainder of file and replace and count occurances that equal to Date Of Birth
-                if DoB != "":
-                    token = "*DoB*"
-                    updated_lines = []
-                    for line in lines:
-                        occurences = line.count(DoB)
-                        if occurences > 0:
-                            dateOfBirthCount+= 1
-                            line = line.replace(DoB, token)
-                        updated_lines.append(line)
-                    file.seek(0)
-                    file.truncate(0)
-                    file.writelines(updated_lines)
-            file.close()
+                with open(self.outputFile, 'w+') as file2:
+                    if DoB != "":
+                        token = "*DoB*"
+                        updated_lines = []
+                        for line in lines:
+                            occurences = line.count(DoB)
+                            if occurences > 0:
+                                dateOfBirthCount+= 1
+                                line = line.replace(DoB, token)
+                            updated_lines.append(line)
+                        file2.seek(0)
+                        file2.truncate(0)
+                        file2.writelines(updated_lines)
 
 
         except FileNotFoundError:
@@ -198,19 +200,20 @@ class SearchRecord:
 
                 
                 #loop through remainder of file and replace and count occurances that equal to Social Security Number
-                if SSN != "":
-                    token = "*SSN*"
-                    updated_lines = []
-                    for line in lines:
-                        occurrences = line.count(SSN)
-                        if occurrences > 0:
-                            socialNumCount+= 1
-                            line = line.replace(SSN, token)
+                with open(self.outputFile, 'w+') as file2:
+                    if SSN != "":
+                        token = "*SSN*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(SSN)
+                            if occurrences > 0:
+                                socialNumCount+= 1
+                                line = line.replace(SSN, token)
                         updated_lines.append(line)
-                    file.seek(0)
-                    file.truncate(0)
-                    file.writelines(updated_lines)
-            file.close()
+                        file2.seek(0)
+                        file2.truncate(0)
+                        file2.writelines(updated_lines)
+            
 
 
         except FileNotFoundError:
@@ -240,20 +243,20 @@ class SearchRecord:
                             break
                 
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
-                if Phone != "":
-                    token = "*phone*"
-                    updated_lines = []
-                    for line in lines:
-                        occurrences = line.count(Phone)
-                        if occurrences > 0:
-                            phoneNumCount+= 1
-                            line = line.replace(Phone, token)
-                        updated_lines.append(line)
-                    file.seek(0)
-                    file.truncate(0)
-                    file.writelines(updated_lines)
-            file.close()
-
+                
+                with open(self.outputFile, 'w+') as file2:
+                    if Phone != "":
+                        token = "*phone*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(Phone)
+                            if occurrences > 0:
+                                phoneNumCount+= 1
+                                line = line.replace(Phone, token)
+                            updated_lines.append(line)
+                        file2.seek(0)
+                        file2.truncate(0)
+                        file2.writelines(updated_lines)
 
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
@@ -282,27 +285,25 @@ class SearchRecord:
                             break
                
                 #loop through remainder of file and replace and count occurances that equal to Email
-                if Email != "":
-                    token = "*email*"
-                    updated_lines = []
-                    for line in lines:
-                        occurrences = line.count(Email)
-                        if occurrences > 0:
-                            emailCount+= 1
-                            line = line.replace(Email, token)
-                        updated_lines.append(line)
-                    file.seek(0)
-                    file.truncate(0)
-                    file.writelines(updated_lines)
-                file.close()
+                with open(self.outputFile, 'w+') as file2:
+                    if Email != "":
+                        token = "*email*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(Email)
+                            if occurrences > 0:
+                                emailCount+= 1
+                                line = line.replace(Email, token)
+                            updated_lines.append(line)
+                        file2.seek(0)
+                        file2.truncate(0)
+                        file2.writelines(updated_lines)
 
         
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
         
         return emailCount
-
-
 
 #Record takes in the input list of PHI and addresses the necessary search functions
 class Record(object):
