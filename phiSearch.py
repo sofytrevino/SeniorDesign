@@ -68,10 +68,13 @@ class SearchRecord:
                     token = "*name*"
                     updated_lines = []
                     for line in lines:
-                        occurences =  line.count(Name) + line.count(L_name)
+                        occurences =  line.count(Name)
+                        occurences2 = line.count(L_name)
                         if occurences > 0:
                             nameCount += occurences
                             line = line.replace(Name, token)
+                        if occurences2 > 0:
+                            nameCount += occurences
                             line = line.replace(L_name, token)
                         updated_lines.append(line)
                     file.seek(0)
