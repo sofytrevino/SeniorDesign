@@ -101,10 +101,8 @@ class SearchRecord:
                         elif keyword == True:
                             keyword = False
                             #add the following words after address to the address String object
-                            """if (Address != "Address " or Address != "address "):
-                                Address += " "
-                                Address += word"""
-                            Address = " ".join(words)
+                            if "Address:" in line or "address:" in line:
+                                Address = line.split(":", 1)[1].strip()
                             print(Address)
                             break
                 
