@@ -57,10 +57,10 @@ class SearchRecord:
                     words = line.split()
                     for word in words:
                         if(word == "Patient:" or word == "Name:"):
-                            keyword = True
-                        elif keyword:
-                            keyword = False
-                            Name = word.strip()
+                            parts = line.split()
+                            if len(parts) > 1:
+                                Name = " ".join(parts[1:]).strip()
+                                L_name = Name.split()[-1]
                             print(Name)
                             break
                 #loop through remainder of file and replace and count occurances that equal to Name
@@ -68,10 +68,11 @@ class SearchRecord:
                     token = "*name*"
                     updated_lines = []
                     for line in lines:
-                        occurences =  line.count(Name)
+                        occurences =  line.count(Name) + line.count(L_name)
                         if occurences > 0:
                             nameCount += occurences
                             line = line.replace(Name, token)
+                            line = line.replace(L_name, token)
                         updated_lines.append(line)
                     file.seek(0)
                     #file.truncate(0)
