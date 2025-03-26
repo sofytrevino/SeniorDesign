@@ -50,19 +50,24 @@ class SearchRecord:
         try:
             with open(self.record, 'r+') as file:
                 #first find the name we will be looking for
+                nameBank = {"Patient:", "Name:", "name:"}
                 keyword = False
                 Name = ""
                 lines = file.readlines()
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        if(word == "Patient:" or word == "Name:"):
-                            parts = line.split()
-                            if len(parts) > 1:
-                                Name = " ".join(parts[1:]).strip()
-                                L_name = Name.split()[-1]
-                            print(Name)
-                            break
+                        if not keyword:
+                            if(word in nameBank):
+                                parts = line.split()
+                                if len(parts) > 1:
+                                    Name = " ".join(parts[2:]).strip()
+                                    L_name = Name.split()[-1]
+                                print(Name)
+                                #print(L_name)
+                                keyword = True
+                                break
+                                
                 #loop through remainder of file and replace and count occurances that equal to Name
                 if Name != "":
                     token = "*name*"
@@ -95,20 +100,23 @@ class SearchRecord:
                 #first find the address we will be looking for
                 lines = file.readlines()
                 keyword = False
+                found = False
                 Address = ""
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        if(word == "Address:" or word == 'address:'):
-                            keyword = True
-                            #Address = word
-                        elif keyword == True:
-                            keyword = False
-                            #add the following words after address to the address String object
-                            if "Address:" in line or "address:" in line:
-                                Address = line.split(":", 1)[1].strip()
-                            print(Address)
-                            break
+                        if not found:
+                            if(word == "Address:" or word == 'address:'):
+                                keyword = True
+                                #Address = word
+                            elif keyword == True:
+                                keyword = False
+                                #add the following words after address to the address String object
+                                if "Address:" in line or "address:" in line:
+                                    Address = line.split(":", 1)[1].strip()
+                                print(Address)
+                                found = True
+                                break
                 
                 #loop through remainder of file and replace and count occurances that equal to Email
                 if Address != "":
@@ -139,18 +147,21 @@ class SearchRecord:
                 #first find the date of birth we will be looking for
                 lines = file.readlines()
                 keyword = False
+                found = False
                 DoB = ""
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        #print("word: ", word)
-                        if(word == "Date of Birth:" or word == 'date of birth:' or word == 'DoB:' or word == 'dob:' or word == "Birth:"):
-                            keyword = True
-                        elif keyword == True:
-                            DoB = word.strip()
-                            keyword = False
-                            print(DoB)
-                            break
+                        if not found:
+                            #print("word: ", word)
+                            if(word == "Date of Birth:" or word == 'date of birth:' or word == 'DoB:' or word == 'dob:' or word == "Birth:"):
+                                keyword = True
+                            elif keyword == True:
+                                DoB = word.strip()
+                                keyword = False
+                                print(DoB)
+                                found = True
+                                break
                 #loop through remainder of file and replace and count occurances that equal to Date Of Birth
                 if DoB != "":
                     token = "*DoB*"
@@ -181,17 +192,20 @@ class SearchRecord:
                 #first find the social security number we will be looking for
                 lines = file.readlines()
                 keyword = False
+                found = False
                 SSN = ""
                 for line in lines:
                     words =  line.split()
                     for word in words:
-                        if(word == "Social Security Number:" or word == 'Social Secuirty:' or word == 'social security number:' or word == 'social security:' or word == 'SSN:' or word == 'ssn:' or word == "Number:"):
-                            keyword = True
-                        elif keyword == True:
-                            keyword = False
-                            SSN = word.strip()
-                            print(SSN)
-                            break
+                        if not found:
+                            if(word == "Social Security Number:" or word == 'Social Secuirty:' or word == 'social security number:' or word == 'social security:' or word == 'SSN:' or word == 'ssn:' or word == "Number:"):
+                                keyword = True
+                            elif keyword == True:
+                                keyword = False
+                                SSN = word.strip()
+                                print(SSN)
+                                found = True
+                                break
                 
                 #loop through remainder of file and replace and count occurances that equal to Social Security Number  
                 if SSN != "":
@@ -223,17 +237,20 @@ class SearchRecord:
                 #first find the phone number we will be looking for
                 lines = file.readlines()
                 keyword = False
+                found = False
                 Phone = ""
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        if(word == "Phone Number:" or word == 'phone number:' or word == 'Phone:' or word == 'phone:'):
-                            keyword = True
-                        elif keyword == True:
-                            keyword = False
-                            Phone = word
-                            print(Phone)
-                            break
+                        if not found:
+                            if(word == "Phone Number:" or word == 'phone number:' or word == 'Phone:' or word == 'phone:'):
+                                keyword = True
+                            elif keyword == True:
+                                keyword = False
+                                Phone = word
+                                print(Phone)
+                                found = True
+                                break
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
                 if Phone != "":
                         token = "*phone*"
@@ -261,18 +278,22 @@ class SearchRecord:
             with open(self.record, 'r+') as file:
                 #first find the email we will be looking for
                 lines = file.readlines()
+                emailBank = {"email:", "Email:"}
                 keyword = False
+                found = False
                 Email = ""
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        if(word == "Email address:" or word == 'email:' or word == "Email Address:"  or word == "email address:" ):
-                            keyword = True
-                        elif keyword == True:
-                            keyword = False
-                            Email = word.strip()
-                            print(Email)
-                            break
+                        if not found:
+                            if(word in emailBank):
+                                keyword = True
+                            elif keyword == True:
+                                keyword = False
+                                Email = word.strip()
+                                print(Email)
+                                found = True
+                                break
                 
                 #loop through remainder of file and replace and count occurances that equal to Email
                 if Email != "":
@@ -288,14 +309,154 @@ class SearchRecord:
                         file.truncate(0)
                         file.writelines(updated_lines)
         
-            
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
 
-        
+
+        return emailCount
+    
+
+    #def provider
+    def provider(self):
+        providerCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the name we will be looking for
+                providerBank = {"Provider", "Provider:"}
+                keyword = False
+                Provider = ""
+                lines = file.readlines()
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if not keyword:
+                            if(word in providerBank):
+                                print("provider word: ", word)
+                                parts = line.split()
+                                if len(parts) > 1:
+                                    Provider = " ".join(parts[2:]).strip()
+                                    L_Provider = Provider.split()[-1]
+                                print(Provider)
+                                print(L_Provider)
+                                keyword = True
+                                break
+                                
+                #loop through remainder of file and replace and count occurances that equal to Name
+                if Provider != "":
+                    token = "*Provider*"
+                    updated_lines = []
+                    for line in lines:
+                        occurences =  line.count(Provider)
+                        occurences2 = line.count(L_Provider)
+                        if occurences > 0:
+                            providerCount += occurences
+                            line = line.replace(Provider, token)
+                        if occurences2 > 0:
+                            providerCount += occurences
+                            line = line.replace(L_Provider, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    #file.truncate(0)
+                    file.writelines(updated_lines)
+            
+                
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
         
-        return emailCount
+        return providerCount
+
+
+    #def hospital
+    def hospital(self):
+        hospitalCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the name we will be looking for
+                hospitalBank = {"Hospital", "Hospital:"}
+                keyword = False
+                Hospital = ""
+                lines = file.readlines()
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if not keyword:
+                            if(word in hospitalBank):
+                                parts = line.split()
+                                if len(parts) > 1:
+                                    Hospital = " ".join(parts[2:]).strip()
+                                    L_Hospital = Hospital.split()[-1]
+                                print(Hospital)
+                                print(L_Hospital)
+                                keyword = True
+                                break
+                                
+                #loop through remainder of file and replace and count occurances that equal to Name
+                if Hospital != "":
+                    token = "*HospitalName*"
+                    updated_lines = []
+                    for line in lines:
+                        occurences =  line.count(Hospital)
+                        occurences2 = line.count(L_Hospital)
+                        if occurences > 0:
+                            hospitalCount += occurences
+                            line = line.replace(Hospital, token)
+                        if occurences2 > 0:
+                            hospitalCount += occurences
+                            line = line.replace(L_Hospital, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    #file.truncate(0)
+                    file.writelines(updated_lines)
+            
+                
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        
+        return hospitalCount
+
+
+    #def allergies
+
+
+
+    #def lab resutls
+    def lab(self):
+        labCount = 0
+        labBank = {"Lab"}
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the email we will be looking for
+                lines = file.readlines()
+                keyword = False
+                found = False
+                Lab = "-"
     
+                token = "*Lab Results*"
+                updated_lines = []
+                for line in lines:
+                    if found and line.startswith("-"):
+                        labCount+= 1
+                        line = token
+                    if found and not line.startswith("-"):
+                        found = False
+                    if "Lab Results" in line:
+                        found = True
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+
+        return labCount
+
+    #def medicaid account
+
+
+    #def social worker
+
 
 
 
@@ -311,8 +472,8 @@ class Record(object):
         #loop through self.input and call corresponding functions in Search Record
         #print("inputs: ", inputs)
         for info in inputs:
-            if "Name" in info:
-                #print("record name")
+            if "Name" in info or "Patient" in info:
+                print("record name")
                 names = self.algorithm.name()
                 counts.append(names)
             elif "Address" in info:
@@ -332,9 +493,21 @@ class Record(object):
                 phone = self.algorithm.phoneNum()
                 counts.append(phone)
             elif "Email" in info:
-                #print("record email")
+                print("record email")
                 email = self.algorithm.email()
                 counts.append(email)
+            elif "Provider" in info:
+                #print("record provider")
+                provider = self.algorithm.provider()
+                counts.append(provider)
+            elif "Hospital" in info:
+                #print("record hospital")
+                hospital = self.algorithm.hospital()
+                counts.append(hospital)
+            elif "Lab" in info:
+                #print("record lab resutls")
+                lab = self.algorithm.lab()
+                counts.append(lab)
         return counts
 
         
@@ -348,7 +521,7 @@ def main():
         sys.exit(1)
     inputFile = sys.argv[1]
     recordFile = sys.argv[2]
-    outputFile = "JMS2.txt"
+    outputFile = "NewJMS.txt"
 
     #copy input file to output file
     with open(recordFile, 'r') as source, open(outputFile, "w") as destination:
@@ -357,6 +530,7 @@ def main():
 
     parseInfo = Parsing(inputFile)
     infoList = parseInfo.parse()
+    print("info list: ", infoList)
     search = Record(infoList, outputFile)
     found = search.find()
     print("final count: ", found)
