@@ -63,7 +63,7 @@ class SearchRecord:
                                 if len(parts) > 1:
                                     Name = " ".join(parts[2:]).strip()
                                     L_name = Name.split()[-1]
-                                print(Name)
+                                #print(Name)
                                 #print(L_name)
                                 keyword = True
                                 break
@@ -114,7 +114,7 @@ class SearchRecord:
                                 #add the following words after address to the address String object
                                 if "Address:" in line or "address:" in line:
                                     Address = line.split(":", 1)[1].strip()
-                                print(Address)
+                                #print(Address)
                                 found = True
                                 break
                 
@@ -159,7 +159,7 @@ class SearchRecord:
                             elif keyword == True:
                                 DoB = word.strip()
                                 keyword = False
-                                print(DoB)
+                                #print(DoB)
                                 found = True
                                 break
                 #loop through remainder of file and replace and count occurances that equal to Date Of Birth
@@ -203,7 +203,7 @@ class SearchRecord:
                             elif keyword == True:
                                 keyword = False
                                 SSN = word.strip()
-                                print(SSN)
+                                #print(SSN)
                                 found = True
                                 break
                 
@@ -248,7 +248,7 @@ class SearchRecord:
                             elif keyword == True:
                                 keyword = False
                                 Phone = word
-                                print(Phone)
+                                #print(Phone)
                                 found = True
                                 break
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
@@ -291,7 +291,7 @@ class SearchRecord:
                             elif keyword == True:
                                 keyword = False
                                 Email = word.strip()
-                                print(Email)
+                                #print(Email)
                                 found = True
                                 break
                 
@@ -331,13 +331,12 @@ class SearchRecord:
                     for word in words:
                         if not keyword:
                             if(word in providerBank):
-                                print("provider word: ", word)
                                 parts = line.split()
                                 if len(parts) > 1:
                                     Provider = " ".join(parts[2:]).strip()
                                     L_Provider = Provider.split()[-1]
-                                print(Provider)
-                                print(L_Provider)
+                                #print(Provider)
+                                #print(L_Provider)
                                 keyword = True
                                 break
                                 
@@ -385,8 +384,8 @@ class SearchRecord:
                                 if len(parts) > 1:
                                     Hospital = " ".join(parts[2:]).strip()
                                     L_Hospital = Hospital.split()[-1]
-                                print(Hospital)
-                                print(L_Hospital)
+                                #print(Hospital)
+                                #print(L_Hospital)
                                 keyword = True
                                 break
                                 
@@ -473,7 +472,7 @@ class Record(object):
         #print("inputs: ", inputs)
         for info in inputs:
             if "Name" in info or "Patient" in info:
-                print("record name")
+                #print("record name")
                 names = self.algorithm.name()
                 counts.append(names)
             elif "Address" in info:
@@ -493,7 +492,7 @@ class Record(object):
                 phone = self.algorithm.phoneNum()
                 counts.append(phone)
             elif "Email" in info:
-                print("record email")
+                #print("record email")
                 email = self.algorithm.email()
                 counts.append(email)
             elif "Provider" in info:
@@ -530,10 +529,10 @@ def main():
 
     parseInfo = Parsing(inputFile)
     infoList = parseInfo.parse()
-    print("info list: ", infoList)
+    #print("info list: ", infoList)
     search = Record(infoList, outputFile)
     found = search.find()
-    print("final count: ", found)
+    print("PHI Final Count: ", found)
 
    
 if __name__ == "__main__":
