@@ -181,7 +181,7 @@ class SearchRecord:
             print(f"Error: File '{self.record}' not found.")
         
         return dateOfBirthCount
-
+    
     
     #def socialNum(self):
     def socialNum(self):
@@ -414,9 +414,6 @@ class SearchRecord:
         return hospitalCount
 
 
-    #def allergies
-
-
 
     #def lab resutls
     def lab(self):
@@ -454,7 +451,38 @@ class SearchRecord:
     #def medicaid account
 
 
+    #def allergies (only those listed in PHI)
+
+
+    #def allergies(self, list)  list = allergies you are looking for
+
+    #def dates
+
+
     #def social worker
+
+    #def fax number
+
+    #def medical record #
+
+    #def account numbers
+
+    #def certificate/license num
+
+    #def serial num
+
+    #def device identifiers
+
+    #def URL
+
+    #def IP address
+
+    #def biometric identifiers
+
+    #def full face images
+
+    #def unique id
+
 
 
 
@@ -507,6 +535,66 @@ class Record(object):
                 #print("record lab resutls")
                 lab = self.algorithm.lab()
                 counts.append(lab)
+            """"
+            elif "Allergies" in info:
+                #print("record allergies results")
+                allergies = self.algorithm.allergies()
+                counts.append(allergies)
+            elif "Medicaid" in info or "Health plan" in info"
+                #print("record medicaid")
+                medicaid = self.algorithm.medicaid()
+                counts.append(medicaid)
+            elif "Social worker" in info:
+                #print("record social worker")
+                socialW = self.algorithm.socialWorker()
+                counts.appened(socialW)
+            elif "Fax" in info:
+                #print("record fax number")
+                fax = self.algorithm.fax()
+                counts.append(fax)
+            elif "Medical" in info
+                #print("record medical record num")
+                medical = self.algorithm.medical()
+                counts.append(medical)
+            elif "Accounts" in info:
+                #print("record Account nums")
+                accounts = self.algorithm.accounts()
+                counts.append(accounts)
+            elif "Certificate" in info or "License" in info:
+                #print("record certificate/license num")
+                certificate = self.algorithm.certificate()
+                counts.append(certificate)
+            elif "Serial" in info:
+                #print("record serial num")
+                serial = self.algorithm.serial()
+                counts.append(serial)
+            elif "Device" in info
+                #print("record device identifiers")
+                device = self.algorithm.device()
+                counts.append(device)
+            elif "URL" in info or "Web" in info:
+                #print("record URLs")
+                url = self.algorithm.url()
+                counts.append(url)
+            elif "Internet" in info:
+                #print("record IP Address")
+                ip = self.algorithm.ip()
+                counts.append(ip)
+            elif "Biometric" in info:
+                #print("record biometric")
+                biometric = self.algorithm.biometric()
+                counts.append(biometric)
+            elif "Full face" in info:
+                #print("record full face images")
+                face = self.algorithm.face()
+                counts.append(face)
+            elif "Unique" in info:
+                #print("record unique identifying num")
+                uniqueID = self.algorithm.uniqueID()
+                counts.append(uniqueID)
+            """
+
+
         return counts
 
         
