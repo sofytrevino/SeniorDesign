@@ -25,7 +25,13 @@ class Parsing(object):
                     for word in line.split():
                         wordCount += 1
                         if wordCount == 1:
-                            self.info.append(word)
+                            if word == "Allergies":
+                                #word = "".join(line[1:]).strip()
+                                #print("allergies found in parse: ", word)
+                                self.info.append(line)
+                            else:
+                                self.info.append(word)
+                            
 
         except FileNotFoundError:
             print(f"Error: File '{self.input}' not found.")
@@ -427,7 +433,7 @@ class SearchRecord:
                 found = False
                 Lab = "-"
     
-                token = "*Lab Results*"
+                token = "*Lab Results*\n"
                 updated_lines = []
                 for line in lines:
                     if found and line.startswith("-"):
@@ -451,10 +457,50 @@ class SearchRecord:
     #def medicaid account
 
 
-    #def allergies (only those listed in PHI)
-
-
     #def allergies(self, list)  list = allergies you are looking for
+    def allergies(self, list):
+        allergiesCount = 0
+        allergiesBank = {"Allergies"}
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the email we will be looking for
+                lines = file.readlines()
+                keyword = False
+                found = False
+                Allergies = "-"
+                
+                token = "*Allergies*\n"
+                updated_lines = []
+                for line in lines:
+                    if found:
+                        if line.startswith("-"):
+                            word = line.split()
+                            word = " ".join(word[1:]).strip()
+                            #print("line: ", word)
+                            #check if allergy part of the list
+                            for med in list:
+                                if med in word:
+                                    #print("found allergy")
+                                    allergiesCount += 1
+                                    line = token
+                        else:
+                            for med in list:
+                                if med in line:
+                                    #print("found allergy")
+                                    allergiesCount += 1
+                                    line = token
+                    if "Allergies:" in line:
+                        found = True
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+
+        return allergiesCount
 
     #def dates
 
@@ -472,6 +518,47 @@ class SearchRecord:
     #def serial num
 
     #def device identifiers
+    def device(self):
+        deviceIdCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the phone number we will be looking for
+                lines = file.readlines()
+                keyword = False
+                found = False
+                deviceId = ""
+                deviceKeyword = {"Device:"}
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if not found:
+                            if word in deviceKeyword:
+                                keyword = True
+                            elif keyword == True:
+                                keyword = False
+                                deviceId = word
+                                #print(Phone)
+                                found = True
+                                break
+                #loop through remainder of file and replace and count occurances that equal to Phone Number
+                if deviceId != "":
+                        token = "*device id*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(deviceId)
+                            if occurrences > 0:
+                                phoneNumCount+= 1
+                                line = line.replace(deviceId, token)
+                            updated_lines.append(line)
+                        file.seek(0)
+                        file.truncate(0)
+                        file.writelines(updated_lines)
+
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        
+        return phoneNumCount
 
     #def URL
 
@@ -535,12 +622,14 @@ class Record(object):
                 #print("record lab resutls")
                 lab = self.algorithm.lab()
                 counts.append(lab)
-            """"
             elif "Allergies" in info:
-                #print("record allergies results")
-                allergies = self.algorithm.allergies()
+                print("record allergies results")
+                list = "".join(info[9:]).strip()
+                list2 = list.strip("()").split("; ")
+                allergies = self.algorithm.allergies(list2)
                 counts.append(allergies)
-            elif "Medicaid" in info or "Health plan" in info"
+
+            """elif "Medicaid" in info or "Health plan" in info"
                 #print("record medicaid")
                 medicaid = self.algorithm.medicaid()
                 counts.append(medicaid)

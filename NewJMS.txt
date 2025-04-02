@@ -31,10 +31,10 @@ Medications:
 
 Allergies:
 - Penicillin
-- Sulfa drugs (e.g., Bactrim)
+*Allergies*
 - Aspirin
 - Ibuprofen (NSAIDs)
-- Morphine
+*Allergies*
 - Codeine
 - Amoxicillin
 - Cephalosporins
@@ -85,7 +85,11 @@ Plan:
 - Patient education provided on joint protection techniques and importance of regular exercise.
 
 Lab Results (03/09/2024):
-*Lab Results**Lab Results**Lab Results**Lab Results*
+*Lab Results*
+*Lab Results*
+*Lab Results*
+*Lab Results*
+
 Follow-up Appointment:
 - Scheduled for 03/21/2024 with rheumatology.
 
