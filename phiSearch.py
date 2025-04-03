@@ -486,10 +486,10 @@ class SearchRecord:
                         file.truncate(0)
                         file.writelines(updated_lines)
     
-            except FileNotFoundError:
-                print(f"Error: File '{self.record}' not found.")
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
             
-            return socialWorkerCount
+        return socialWorkerCount
 
 
 
