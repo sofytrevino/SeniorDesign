@@ -705,7 +705,7 @@ class Record(object):
                 socialWorker = self.algorithm.socialWorker()
                 counts.append(socialWorker)
             elif "Allergies" in info:
-                print("record allergies results")
+               #print("record allergies results")
                 list = "".join(info[9:]).strip()
                 list2 = list.strip("()").split("; ")
                 allergies = self.algorithm.allergies(list2)
