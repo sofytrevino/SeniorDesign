@@ -508,6 +508,41 @@ class SearchRecord:
 
 
     #def social worker
+    def socialWorker(self):
+        socialWorkerCount = 0
+        try:
+                with open(self.record, 'r+') as file:
+                    # Find the social worker's name
+                    lines = file.readlines()
+                    keyword = False
+                    found = False
+                    SocialWorker = ""
+                    for line in lines:
+                        if not found and ("Social worker:" in line or "Social Worker:" in line):
+                            parts = line.split(":", 1)
+                            if len(parts) > 1:
+                                SocialWorker = parts[1].strip()
+                                found = True
+                                break
+                    
+                    # Replace occurrences of the social worker's name
+                    if SocialWorker:
+                        token = "*Social Worker*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(SocialWorker)
+                            if occurrences > 0:
+                                socialWorkerCount += occurrences
+                                line = line.replace(SocialWorker, token)
+                            updated_lines.append(line)
+                        file.seek(0)
+                        file.truncate(0)
+                        file.writelines(updated_lines)
+    
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+            
+        return socialWorkerCount
 
     #def fax number
 
@@ -633,15 +668,15 @@ class Record(object):
                 #print("record name")
                 names = self.algorithm.name()
                 counts.append(names)
-            elif "Address" in info:
+            if "Address" in info:
                 #print("record address")
                 address = self.algorithm.address()
                 counts.append(address)
-            elif "Date" in info:
+            if "Date" in info:
                 #print("record date")
                 date = self.algorithm.dateOfBirth()
                 counts.append(date)
-            elif "Social" in info:
+            if "Social" in info or "SSN" in info:
                 #print("record social")
                 social = self.algorithm.socialNum()
                 counts.append(social)
@@ -649,22 +684,26 @@ class Record(object):
                 #print("record phone")
                 phone = self.algorithm.phoneNum()
                 counts.append(phone)
-            elif "Email" in info:
+            if "Email" in info:
                 #print("record email")
                 email = self.algorithm.email()
                 counts.append(email)
-            elif "Provider" in info:
+            if "Provider" in info:
                 #print("record provider")
                 provider = self.algorithm.provider()
                 counts.append(provider)
-            elif "Hospital" in info:
+            if "Hospital" in info:
                 #print("record hospital")
                 hospital = self.algorithm.hospital()
                 counts.append(hospital)
-            elif "Lab" in info:
+            if "Lab" in info:
                 #print("record lab resutls")
                 lab = self.algorithm.lab()
                 counts.append(lab)
+            if "Social" in info:
+                #print("record social worker")
+                socialWorker = self.algorithm.socialWorker()
+                counts.append(socialWorker)
             elif "Allergies" in info:
                 print("record allergies results")
                 list = "".join(info[9:]).strip()
