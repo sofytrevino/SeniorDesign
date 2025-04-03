@@ -3,7 +3,7 @@
 
 import sys
 import re
-
+import string
 
 #Parsing class should read inputFile and see what information it needs to search
 class Parsing(object):
@@ -20,17 +20,19 @@ class Parsing(object):
             with open(self.input, 'r') as file:
                 #read PHI values that need to be found and save in self.info
                 #read line by line
+                ALPHA = string.ascii_letters
                 for line in file:
                     wordCount = 0
                     for word in line.split():
-                        wordCount += 1
-                        if wordCount == 1:
-                            if word == "Allergies":
-                                #word = "".join(line[1:]).strip()
-                                #print("allergies found in parse: ", word)
-                                self.info.append(line)
-                            else:
-                                self.info.append(word)
+                        if word.startswith(tuple(ALPHA)):
+                            wordCount += 1
+                            if wordCount == 1:
+                                if word == "Allergies":
+                                    #word = "".join(line[1:]).strip()
+                                    #print("allergies found in parse: ", word)
+                                    self.info.append(line)
+                                else:
+                                    self.info.append(word)
                             
 
         except FileNotFoundError:
@@ -527,7 +529,7 @@ class SearchRecord:
                 keyword = False
                 found = False
                 deviceId = ""
-                deviceKeyword = {"Device:"}
+                deviceKeyword = {"Device:", "Device"}
                 for line in lines:
                     words = line.split()
                     for word in words:
@@ -536,8 +538,8 @@ class SearchRecord:
                                 keyword = True
                             elif keyword == True:
                                 keyword = False
-                                deviceId = word
-                                #print(Phone)
+                                deviceId = word.split(":", 1)[1]
+                                #print(deviceId)
                                 found = True
                                 break
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
@@ -547,7 +549,7 @@ class SearchRecord:
                         for line in lines:
                             occurrences = line.count(deviceId)
                             if occurrences > 0:
-                                phoneNumCount+= 1
+                                deviceIdCount+= 1
                                 line = line.replace(deviceId, token)
                             updated_lines.append(line)
                         file.seek(0)
@@ -558,11 +560,52 @@ class SearchRecord:
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
         
-        return phoneNumCount
+        return deviceIdCount
 
     #def URL
 
     #def IP address
+    def ip(self):
+        ipCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the phone number we will be looking for
+                lines = file.readlines()
+                keyword = False
+                found = False
+                ipAddress = ""
+                ipKeyword = {"Internet", "IP", "IP:"}
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if not found:
+                            if word in ipKeyword:
+                                keyword = True
+                            elif keyword == True:
+                                keyword = False
+                                ipAddress = word.split(":", 1)[1]
+                                #print(deviceId)
+                                found = True
+                                break
+                #loop through remainder of file and replace and count occurances that equal to Phone Number
+                if ipAddress != "":
+                        token = "*IP Address*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(ipAddress)
+                            if occurrences > 0:
+                                ip+= 1
+                                line = line.replace(ipAddress, token)
+                            updated_lines.append(line)
+                        file.seek(0)
+                        file.truncate(0)
+                        file.writelines(updated_lines)
+
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        
+        return ipCount
 
     #def biometric identifiers
 
@@ -628,6 +671,15 @@ class Record(object):
                 list2 = list.strip("()").split("; ")
                 allergies = self.algorithm.allergies(list2)
                 counts.append(allergies)
+            elif "Device" in info:
+                #print("record device identifiers")
+                device = self.algorithm.device()
+                counts.append(device)
+            elif "Internet" in info or "IP" in info:
+                #print("record IP Address")
+                ip = self.algorithm.ip()
+                counts.append(ip)
+
 
             """elif "Medicaid" in info or "Health plan" in info"
                 #print("record medicaid")
@@ -657,18 +709,10 @@ class Record(object):
                 #print("record serial num")
                 serial = self.algorithm.serial()
                 counts.append(serial)
-            elif "Device" in info
-                #print("record device identifiers")
-                device = self.algorithm.device()
-                counts.append(device)
             elif "URL" in info or "Web" in info:
                 #print("record URLs")
                 url = self.algorithm.url()
                 counts.append(url)
-            elif "Internet" in info:
-                #print("record IP Address")
-                ip = self.algorithm.ip()
-                counts.append(ip)
             elif "Biometric" in info:
                 #print("record biometric")
                 biometric = self.algorithm.biometric()
