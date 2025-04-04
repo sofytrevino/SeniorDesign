@@ -459,6 +459,44 @@ class SearchRecord:
     #def medicaid account
 
 
+    def medicaid(self):
+        medicaid_count = 0
+        medicaid_format = re.compile('[0123456789]{4} [0123456789]{4} [0123456789]{4} [0123456789]{4}')
+        try:
+            with open(self.record, 'r+') as file:
+                #first identify the medicaid number we are looking for
+                #replace all occurrences of the medicaid number with the term "medicaid"
+                found = False
+                lines = file.readlines()
+                for line in lines:
+                    if not found:
+                        re.sub(medicaid_format, "*Medicaid Account*", line, medicaid_count)
+                        Medicaid=re.search(medicaid_format, line)
+                        if Medicaid:
+                            found = True
+                            Medicaid = Medicaid.group()  # Output: 1234 5678 9012 3456
+                if not Medicaid:
+                    Medicaid = ""
+
+                #loop through remainder of file and replace and count occurances that equal to Medicaid
+                if Medicaid != "":
+                        token = "*Medicaid Account*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(Medicaid)
+                            if occurrences > 0:
+                                medicaid_count+= 1
+                                line = line.replace(Medicaid, token)
+                            updated_lines.append(line)
+                        file.seek(0)
+                        file.truncate(0)
+                        file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return medicaid_count
+
+
     #def allergies(self, list)  list = allergies you are looking for
     def allergies(self, list):
         allergiesCount = 0
@@ -718,13 +756,13 @@ class Record(object):
                 #print("record IP Address")
                 ip = self.algorithm.ip()
                 counts.append(ip)
-
-
-            """elif "Medicaid" in info or "Health plan" in info"
+            elif "Medicaid" in info or "Health plan" in info:
                 #print("record medicaid")
                 medicaid = self.algorithm.medicaid()
                 counts.append(medicaid)
-            elif "Social worker" in info:
+
+
+            """elif "Social worker" in info:
                 #print("record social worker")
                 socialW = self.algorithm.socialWorker()
                 counts.appened(socialW)
