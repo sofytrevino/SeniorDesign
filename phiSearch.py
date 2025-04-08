@@ -543,6 +543,26 @@ class SearchRecord:
         return allergiesCount
 
     #def dates
+    def dates(self):
+        datesCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the date we will be looking for
+                lines = file.readlines()
+                updated_lines = []
+                for line in lines:
+                    # Updated regex to match dates in MM/DD/YYYY format
+                    dates = re.findall(r'\b\d{1,2}/\d{1,2}/\d{4}\b', line)
+                    for date in dates:
+                        datesCount += 1
+                        line = line.replace(date, "*date*")
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        return datesCount
 
 
     #def social worker
@@ -636,6 +656,25 @@ class SearchRecord:
         return deviceIdCount
 
     #def URL
+    def url(self):
+        urlCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                lines = file.readlines()
+                updated_lines = []
+                for line in lines:
+                    # Updated regex to match URLs starting with https:// or www. and capture everything after
+                    urls = re.findall(r'\b(?:https?://|www\.)[^\s]*', line)
+                    for url in urls:
+                        urlCount += 1
+                        line = line.replace(url, "*URL*")
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        return urlCount
 
     #def IP address
     def ip(self):
@@ -742,6 +781,14 @@ class Record(object):
                 #print("record social worker")
                 socialWorker = self.algorithm.socialWorker()
                 counts.append(socialWorker)
+            if "URL" in info or "Web" in info:
+                #print("record URLs")
+                url = self.algorithm.url()
+                counts.append(url)
+            if "Date" in info:
+                #print("record dates")
+                dates = self.algorithm.dates()
+                counts.append(dates)
             elif "Allergies" in info:
                #print("record allergies results")
                 list = "".join(info[9:]).strip()
