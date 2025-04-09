@@ -603,6 +603,26 @@ class SearchRecord:
         return socialWorkerCount
 
     #def fax number
+    def fax(self):
+        try:
+            with open(self.record, 'r+') as file:
+                lines = file.readlines()
+                updated_lines = []
+                for line in lines:
+                    # match common fax num format
+                    faxes = re.findall(r'(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})', line)
+                    for fax in faxes:
+                        if "fax" in line.lower(): #ensures it's a fax
+                            faxCount += 1
+                            line = line.replace(fax, "*Fax Number*")
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return faxCount
 
     #def medical record #
 
@@ -611,6 +631,26 @@ class SearchRecord:
     #def certificate/license num
 
     #def serial num
+    def serial(self):
+        serialCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                lines = file.readlines()
+                updated_lines = []
+                pattern = re.compile(r'(Serial(?: Number)?:\s*)([A-Za-z0-9\-]+)', re.IGNORECASE)
+                for line in lines:
+                    matches = pattern.findall(line)
+                    for full_match, serial in matches:
+                        serialCount += 1
+                        line = line.replace(serial, "*Serial NUmber*")
+                        updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return serialCount
 
     #def device identifiers
     def device(self):
@@ -789,6 +829,14 @@ class Record(object):
                 #print("record dates")
                 dates = self.algorithm.dates()
                 counts.append(dates)
+            if "Fax" in info:
+                print("record fax")
+                fax = self.algorithm.fax()
+                counts.append(fax)
+            if "Serial" in info:
+                #print("record serialnum")
+                serial = self.algorithm.serial()
+                counts.append(serial)
             elif "Allergies" in info:
                #print("record allergies results")
                 list = "".join(info[9:]).strip()
