@@ -330,7 +330,7 @@ class SearchRecord:
         try:
             with open(self.record, 'r+') as file:
                 #first find the name we will be looking for
-                providerBank = {"Provider", "Provider:"}
+                accountBank = {"Provider", "Provider:"}
                 keyword = False
                 Provider = ""
                 lines = file.readlines()
@@ -338,7 +338,7 @@ class SearchRecord:
                     words = line.split()
                     for word in words:
                         if not keyword:
-                            if(word in providerBank):
+                            if(word in accountBank):
                                 parts = line.split()
                                 if len(parts) > 1:
                                     Provider = " ".join(parts[2:]).strip()
@@ -457,8 +457,6 @@ class SearchRecord:
         return labCount
 
     #def medicaid account
-
-
     def medicaid(self):
         medicaid_count = 0
         medicaid_format = re.compile('[0123456789]{4} [0123456789]{4} [0123456789]{4} [0123456789]{4}')
@@ -496,6 +494,51 @@ class SearchRecord:
 
         return medicaid_count
 
+    #generic account
+    def account(self):
+        accountCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the account occurrence we will be looking for
+                accountBank = {"Account", "Account:", "account", "account:"}
+                keyword = False
+                Account = "" #consider making a list and using in to check if need to add to the array during if statement below
+                lines = file.readlines()
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if not keyword:
+                            if(word in accountBank):
+                                parts = line.split()
+                                if len(parts) > 1:
+                                    Account = " ".join(parts[1:]).strip() #try make 1
+                                    L_Account = Account.split()[-1]
+                                #print(Account)
+                                #print(L_Account)
+                                keyword = True
+                                break
+                                
+                #loop through remainder of file and replace and count occurances that equal to Account
+                if Account != "":
+                    token = "*Account*"
+                    updated_lines = []
+                    for line in lines:
+                        occurences =  line.count(Account)
+                        occurences2 = line.count(L_Account)
+                        if occurences > 0:
+                            accountCount += occurences
+                            line = line.replace(Account, token)
+                        if occurences2 > 0:
+                            accountCount += occurences
+                            line = line.replace(L_Account, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    #file.truncate(0)
+                    file.writelines(updated_lines)
+                
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        return accountCount
 
     #def allergies(self, list)  list = allergies you are looking for
     def allergies(self, list):
@@ -807,6 +850,11 @@ class Record(object):
                 #print("record medicaid")
                 medicaid = self.algorithm.medicaid()
                 counts.append(medicaid)
+            elif "Account" in info:
+                #print("record Acocunt")
+                account = self.algorithm.account()
+                counts.append(account)
+            
 
 
             """elif "Social worker" in info:
