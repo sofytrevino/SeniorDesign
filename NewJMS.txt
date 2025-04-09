@@ -1,112 +1,196 @@
-Patient name: *name*
-DoB: *DoB*
+Patient Name: *name*
+Date of Birth: *DoB*
+Medical record number:TXB4459-BS34334
 SSN: *SSN*
-Date of Visit: 03/07/2024
+Date of Visit: *date*
 Address: *address*
 Phone: *phone*
 Email: *email*
+Health plan beneficiary number: 888-6765-1110
+Device identifier:*device id*
+Pacemaker serial numbers:*Serial Number*
+Pacemaker serial numbers:*Serial Number*
+Code:772980014
 
-Provider name: *Provider*
-Hospital name: *HospitalName*
-Address:  742 Evergreen Terrace Springfield, IL 62704
-Phone: 800-543-7787
-email: firstonecare@1care.net 
- 
-Medicaid account: *Medicaid Account*
-Social worker: *Social Worker* 
+Provider: Dr. Benjamin Wright, MD
+Hospital Name: Greenfield Medical Center
+license number: MD77-786123
+Fax number: *Fax Number*
+Address: *address*
 
-Chief Complaint: "Persistent joint pain and morning stiffness for the past month."
+Account: 4875 2198 6623 7741
+Social Worker: *Social Worker*
+Certificate number:SW788a-7898
+Health Insurance: BCBSX-We32445033
+Group no.: 614277
+Fax no.: *Fax Number*
+email: *email*
+URL:*URL*
+
+Chief Complaint: "Severe headaches and dizziness for the past two weeks."
 
 History of Present Illness (HPI):
-Ms. *name* presents with complaints of progressive joint pain and stiffness, predominantly affecting her hands, wrists, and knees. The symptoms are most pronounced in the morning, lasting approximately 45 minutes before easing slightly with movement. She reports mild swelling in her fingers and occasional warmth around the joints. No known triggers or recent injuries. Over-the-counter NSAIDs provide limited relief. No associated fever, chills, or weight loss.
+Ms. *name* presents with complaints of severe, persistent headaches accompanied by dizziness and occasional nausea. Symptoms began gradually and have been worsening over the past two weeks. She describes the headache as a constant pressure, predominantly in the frontal and temporal regions. No known history of migraines. Over-the-counter pain relievers provide minimal relief. No recent head trauma. Denies fever, vision changes, or weakness.
 
 Past Medical History (PMH):
-- Hypothyroidism (diagnosed 2015)
-- Osteoarthritis (diagnosed 2020)
-- No known surgical history
+
+Hypertension (diagnosed 2019)
+
+Anxiety disorder (diagnosed 2021)
+
+No known surgical history
 
 Medications:
-- Levothyroxine 75 mcg daily
-- Ibuprofen 400 mg as needed for pain
+
+Lisinopril 10 mg daily
+
+Alprazolam 0.5 mg as needed for anxiety
+
+Acetaminophen 500 mg as needed for pain
 
 Allergies:
-- Penicillin
-*Allergies*
-- Aspirin
-- Ibuprofen (NSAIDs)
-*Allergies*
-- Codeine
-- Amoxicillin
-- Cephalosporins
-- Anticonvulsants (e.g., Phenytoin)
+
+Penicillin
+
+NSAIDs (e.g., ibuprofen, naproxen)
+
+Latex
 
 Family History:
-- Mother: Rheumatoid arthritis
-- Father: Hypertension, stroke
+
+Mother: Hypertension, migraines
+
+Father: Type 2 diabetes, stroke
+
+Biometric: Fingerprint Recognition 
 
 Social History:
-- Non-smoker
-- Occasional alcohol consumption (1-2 glasses of wine per week)
-- Works as a librarian
-- Enjoys gardening and knitting
+
+Non-smoker
+
+Occasional alcohol consumption (1-2 drinks per week)
+
+Works as a graphic designer
+
+Enjoys yoga and reading
 
 Review of Systems (ROS):
-- Constitutional: Denies fever, chills, or weight loss.
-- Musculoskeletal: Positive for joint pain, stiffness, and mild swelling.
-- Cardiovascular: Denies chest pain, palpitations, or edema.
-- Respiratory: Denies cough, shortness of breath, or wheezing.
-- Gastrointestinal: Denies nausea, vomiting, or abdominal pain.
-- Neurological: Denies headache, dizziness, or weakness.
+
+Constitutional: Denies fever, chills, or weight loss.
+
+Neurological: Positive for headaches and dizziness. Denies numbness or weakness.
+
+Cardiovascular: Denies chest pain, palpitations, or shortness of breath.
+
+Respiratory: Denies cough, wheezing, or dyspnea.
+
+Gastrointestinal: Reports occasional nausea. Denies vomiting or diarrhea.
 
 Physical Examination:
-- General: Alert and oriented, no acute distress.
-- Vital Signs:
-  - Blood pressure: 128/76 mmHg
-  - Heart rate: 74 bpm
-  - Respiratory rate: 16 breaths/min
-  - Oxygen saturation: 98% on room air
-  - Temperature: 98.4°F (36.9°C)
-- Musculoskeletal: Mild swelling and tenderness over the PIP and MCP joints bilaterally. Decreased grip strength. Knees show mild effusion with tenderness on palpation.
-- Cardiovascular: Regular heart rate and rhythm, no murmurs.
-- Respiratory: Clear breath sounds bilaterally.
-- Abdomen: Soft, non-tender.
-- Extremities: No edema.
+
+General: Alert and oriented, appears slightly fatigued.
+
+Vital Signs:
+
+Blood pressure: 142/88 mmHg
+
+Heart rate: 78 bpm
+
+Respiratory rate: 18 breaths/min
+
+Oxygen saturation: 99% on room air
+
+Temperature: 98.1°F (36.7°C)
+
+Neurological: Cranial nerves intact. No focal neurological deficits.
+
+Cardiovascular: Regular heart rate and rhythm, no murmurs.
+
+Respiratory: Clear breath sounds bilaterally.
+
+Abdomen: Soft, non-tender.
 
 Assessment:
-- Suspected rheumatoid arthritis
-- Hypothyroidism, stable
-- Osteoarthritis, stable
+
+Likely tension headaches vs. early migraines
+
+Hypertension, mildly elevated
+
+Anxiety disorder
 
 Plan:
-- Ordered rheumatoid factor (RF), anti-CCP antibodies, ESR, and CRP.
-- Prescribed a short course of prednisone 10 mg daily for 7 days to reduce inflammation.
-- Referred to rheumatology for further evaluation.
-- Advised continued use of NSAIDs for symptom relief and application of warm compresses.
-- Patient education provided on joint protection techniques and importance of regular exercise.
 
-Lab Results (03/09/2024):
-*Lab Results*
-*Lab Results*
-*Lab Results*
-*Lab Results*
+Prescribed sumatriptan 50 mg as needed for severe headaches.
 
-Follow-up Appointment:
-- Scheduled for 03/21/2024 with rheumatology.
+Advised patient to keep a headache diary to track triggers and frequency.
+
+Recommended increased hydration and stress management techniques.
+
+Adjusted lisinopril dosage to 20 mg daily to better control blood pressure.
+
+Referred to neurology for further evaluation.
+
+Patient education provided on lifestyle modifications to manage headaches and hypertension.
+
+Lab Results (*date*):
+
+CBC: Normal
+
+Electrolytes: Normal
+
+MRI Brain: No acute abnormalities detected
+
+Follow-up Appointments:
+
+Scheduled for *date* with neurology.
+
+Additional follow-up scheduled for *date* to reassess headache frequency and medication effectiveness.
+
+Blood pressure check-in scheduled for *date* to monitor response to adjusted lisinopril dosage.
 
 Provider Notes:
-- Discussed the likelihood of rheumatoid arthritis given the clinical presentation and lab findings. Patient was receptive to referral and understands the importance of early intervention.
 
-03/21/2024 (Rheumatology Follow-up):
-- Confirmed diagnosis of rheumatoid arthritis.
-- Initiated methotrexate 10 mg weekly with folic acid supplementation.
-- Provided detailed education on medication side effects and importance of regular lab monitoring.
-- Plan for gradual tapering of prednisone and reassessment in 4 weeks.
-- ecommended baseline lab tests prior to starting methotrexate, including CBC, LFTs, and renal function.
-- Advised patient on the importance of contraception while on methotrexate due to teratogenic risks.
-- Encouraged regular exercise to maintain joint flexibility and reduce stiffness.
-- Scheduled follow-up appointment in 4 weeks to monitor response to methotrexate and assess for potential side effects.
+Patient was receptive to headache management strategies and willing to implement lifestyle changes.
 
+Discussed importance of medication adherence and monitoring blood pressure regularly.
 
-ects.
+Recommended continued use of relaxation techniques, such as deep breathing and mindfulness, to manage anxiety-related symptoms.
 
+Encouraged patient to identify possible dietary triggers for headaches and maintain a balanced sleep schedule.
+
+Instructed patient to report any worsening symptoms, changes in headache pattern, or development of neurological deficits immediately.
+
+*date* (Neurology Follow-up):
+
+Patient reports mild improvement in symptoms.
+
+MRI confirmed no serious pathology.
+
+Diagnosed with tension-type headaches.
+
+Initiated amitriptyline 10 mg nightly for headache prevention.
+
+Advised continued monitoring and follow-up in 6 weeks.
+
+*date* (Blood Pressure Follow-up):
+
+Patient reports consistent use of lisinopril 20 mg daily.
+
+Blood pressure reading: 134/82 mmHg, showing mild improvement.
+
+Encouraged patient to maintain low-sodium diet and monitor at-home readings.
+
+Next follow-up scheduled in one month.
+
+*date* (Headache and Medication Follow-up):
+
+Patient reports further reduction in headache frequency and severity.
+
+Tolerating amitriptyline well with no significant side effects.
+
+Plan to continue current treatment and reassess in three months.
+
+Patient instructed to reach out if symptoms worsen or new concerns arise.
+
+e.
 

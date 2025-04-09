@@ -59,6 +59,7 @@ class SearchRecord:
             with open(self.record, 'r+') as file:
                 #first find the name we will be looking for
                 nameBank = {"Patient:", "Name:", "name:"}
+                namesFound = []
                 keyword = False
                 Name = ""
                 lines = file.readlines()
@@ -70,6 +71,7 @@ class SearchRecord:
                                 parts = line.split()
                                 if len(parts) > 1:
                                     Name = " ".join(parts[2:]).strip()
+                                    namesFound.append(Name)
                                     L_name = Name.split()[-1]
                                 #print(Name)
                                 #print(L_name)
@@ -80,19 +82,20 @@ class SearchRecord:
                 if Name != "":
                     token = "*name*"
                     updated_lines = []
-                    for line in lines:
-                        occurences =  line.count(Name)
-                        occurences2 = line.count(L_name)
-                        if occurences > 0:
-                            nameCount += occurences
-                            line = line.replace(Name, token)
-                        if occurences2 > 0:
-                            nameCount += occurences
-                            line = line.replace(L_name, token)
-                        updated_lines.append(line)
-                    file.seek(0)
-                    #file.truncate(0)
-                    file.writelines(updated_lines)
+                    for Name in namesFound:
+                        for line in lines:
+                            occurences =  line.count(Name)
+                            occurences2 = line.count(L_name)
+                            if occurences > 0:
+                                nameCount += occurences
+                                line = line.replace(Name, token)
+                            if occurences2 > 0:
+                                nameCount += occurences
+                                line = line.replace(L_name, token)
+                            updated_lines.append(line)
+                        file.seek(0)
+                        #file.truncate(0)
+                        file.writelines(updated_lines)
             
                 
         except FileNotFoundError:
@@ -107,34 +110,37 @@ class SearchRecord:
             with open(self.record, 'r+') as file:
                 #first find the address we will be looking for
                 lines = file.readlines()
+                addressFound = []
                 keyword = False
                 found = False
                 Address = ""
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        if not found:
-                            if(word == "Address:" or word == 'address:'):
-                                keyword = True
-                                #Address = word
-                            elif keyword == True:
-                                keyword = False
-                                #add the following words after address to the address String object
-                                if "Address:" in line or "address:" in line:
-                                    Address = line.split(":", 1)[1].strip()
-                                #print(Address)
-                                found = True
-                                break
+                        if(word == "Address:" or word == 'address:'):
+                            keyword = True
+                            #Address = word
+                        elif keyword == True:
+                            keyword = False
+                            #add the following words after address to the address String object
+                            if "Address:" in line or "address:" in line:
+                                Address = line.split(":", 1)[1].strip()
+                            addressFound.append(Address)
+                            #print(Address)
+                                
+                
                 
                 #loop through remainder of file and replace and count occurances that equal to Email
                 if Address != "":
                         token = "*address*"
                         updated_lines = []
                         for line in lines:
-                            occurrences = line.count(Address)
-                            if occurrences > 0:
-                                addressCount+= 1
-                                line = line.replace(Address, token)
+                            for Address in addressFound:
+                                if Address in line:
+                                    occurrences = line.count(Address)
+                                    if occurrences > 0:
+                                        addressCount+= 1
+                                        line = line.replace(Address, token)
                             updated_lines.append(line)
                         file.seek(0)
                         file.truncate(0)
@@ -287,31 +293,33 @@ class SearchRecord:
                 #first find the email we will be looking for
                 lines = file.readlines()
                 emailBank = {"email:", "Email:"}
+                emailFound = []
                 keyword = False
                 found = False
                 Email = ""
                 for line in lines:
                     words = line.split()
                     for word in words:
-                        if not found:
-                            if(word in emailBank):
-                                keyword = True
-                            elif keyword == True:
-                                keyword = False
-                                Email = word.strip()
-                                #print(Email)
-                                found = True
-                                break
+                        if(word in emailBank):
+                            keyword = True
+                        elif keyword == True:
+                            keyword = False
+                            Email = word.strip()
+                            emailFound.append(Email)
+                            #print(Email)
+                            #found = True
                 
                 #loop through remainder of file and replace and count occurances that equal to Email
                 if Email != "":
                         token = "*email*"
                         updated_lines = []
                         for line in lines:
-                            occurrences = line.count(Email)
-                            if occurrences > 0:
-                                emailCount+= 1
-                                line = line.replace(Email, token)
+                            for Email in emailFound:
+                                if Email in line:
+                                    occurrences = line.count(Email)
+                                    if occurrences > 0:
+                                        emailCount+= 1
+                                        line = line.replace(Email, token)
                             updated_lines.append(line)
                         file.seek(0)
                         file.truncate(0)
@@ -559,7 +567,6 @@ class SearchRecord:
                         if line.startswith("-"):
                             word = line.split()
                             word = " ".join(word[1:]).strip()
-                            #print("line: ", word)
                             #check if allergy part of the list
                             for med in list:
                                 if med in word:
@@ -646,6 +653,30 @@ class SearchRecord:
         return socialWorkerCount
 
     #def fax number
+    def fax(self):
+        faxCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                lines = file.readlines()
+                updated_lines = []
+                for line in lines:
+                    # match common fax num format
+                    #faxes = re.findall(r'(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})', line)
+                    fax = re.search(r'(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})', line)
+                    #for fax in faxes:
+                    if "fax" in line.lower():#ensures it's a fax
+                        if fax: 
+                            fax = fax.group()
+                            faxCount += 1
+                            line = line.replace(fax, "*Fax Number*")
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return faxCount
 
     #def medical record #
 
@@ -654,6 +685,29 @@ class SearchRecord:
     #def certificate/license num
 
     #def serial num
+    def serial(self):
+        serialCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                lines = file.readlines()
+                updated_lines = []
+                #pattern = re.compile(r'(Serial(?: Number)?:\s*)([A-Za-z0-9\-]+)', re.IGNORECASE)
+                pattern = re.compile(r'\b(?:serial\s*number(?:s)?|serials?|s/n)\s*:?\s*([A-Za-z0-9_\-\/]+)', re.IGNORECASE)
+                for line in lines:
+                    matches = pattern.findall(line)
+                    for serial in matches:
+                        serialCount += 1
+                        #print(serial)
+                        line = line.replace(serial, "*Serial Number*")
+                        updated_lines.append(line)
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return serialCount
 
     #def device identifiers
     def device(self):
@@ -804,12 +858,12 @@ class Record(object):
                 #print("record phone")
                 phone = self.algorithm.phoneNum()
                 counts.append(phone)
-            if "Email" in info:
+            if "Email" in info or "Electronic" in info:
                 #print("record email")
                 email = self.algorithm.email()
                 counts.append(email)
             if "Provider" in info:
-                #print("record provider")
+                print("record provider")
                 provider = self.algorithm.provider()
                 counts.append(provider)
             if "Hospital" in info:
@@ -832,21 +886,29 @@ class Record(object):
                 #print("record dates")
                 dates = self.algorithm.dates()
                 counts.append(dates)
-            elif "Allergies" in info:
+            if "Fax" in info:
+                #print("record fax")
+                fax = self.algorithm.fax()
+                counts.append(fax)
+            if "serial" in info:
+                #print("record serial num")
+                serial = self.algorithm.serial()
+                counts.append(serial)
+            if "Allergies" in info:
                #print("record allergies results")
                 list = "".join(info[9:]).strip()
                 list2 = list.strip("()").split("; ")
                 allergies = self.algorithm.allergies(list2)
                 counts.append(allergies)
-            elif "Device" in info:
+            if "Device" in info:
                 #print("record device identifiers")
                 device = self.algorithm.device()
                 counts.append(device)
-            elif "Internet" in info or "IP" in info:
+            if "Internet" in info or "IP" in info:
                 #print("record IP Address")
                 ip = self.algorithm.ip()
                 counts.append(ip)
-            elif "Medicaid" in info or "Health plan" in info:
+            if "Medicaid" in info or "Health plan" in info:
                 #print("record medicaid")
                 medicaid = self.algorithm.medicaid()
                 counts.append(medicaid)
