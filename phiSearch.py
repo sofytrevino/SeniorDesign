@@ -604,21 +604,25 @@ class SearchRecord:
 
     #def fax number
     def fax(self):
+        faxCount = 0
         try:
             with open(self.record, 'r+') as file:
                 lines = file.readlines()
                 updated_lines = []
                 for line in lines:
                     # match common fax num format
-                    faxes = re.findall(r'(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})', line)
-                    for fax in faxes:
-                        if "fax" in line.lower(): #ensures it's a fax
+                    #faxes = re.findall(r'(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})', line)
+                    fax = re.search(r'(\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})', line)
+                    #for fax in faxes:
+                    if "fax" in line.lower():#ensures it's a fax
+                        if fax: 
+                            fax = fax.group()
                             faxCount += 1
                             line = line.replace(fax, "*Fax Number*")
-                        updated_lines.append(line)
-                    file.seek(0)
-                    file.truncate(0)
-                    file.writelines(updated_lines)
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
 
@@ -637,13 +641,16 @@ class SearchRecord:
             with open(self.record, 'r+') as file:
                 lines = file.readlines()
                 updated_lines = []
-                pattern = re.compile(r'(Serial(?: Number)?:\s*)([A-Za-z0-9\-]+)', re.IGNORECASE)
+                #pattern = re.compile(r'(Serial(?: Number)?:\s*)([A-Za-z0-9\-]+)', re.IGNORECASE)
+                pattern = re.compile(r'\b(?:serial\s*number(?:s)?|serials?|s/n)\s*:?\s*([A-Za-z0-9_\-\/]+)', re.IGNORECASE)
                 for line in lines:
                     matches = pattern.findall(line)
-                    for full_match, serial in matches:
+                    for serial in matches:
                         serialCount += 1
-                        line = line.replace(serial, "*Serial NUmber*")
+                        #print(serial)
+                        line = line.replace(serial, "*Serial Number*")
                         updated_lines.append(line)
+                    updated_lines.append(line)
                 file.seek(0)
                 file.truncate(0)
                 file.writelines(updated_lines)
@@ -806,7 +813,7 @@ class Record(object):
                 email = self.algorithm.email()
                 counts.append(email)
             if "Provider" in info:
-                #print("record provider")
+                print("record provider")
                 provider = self.algorithm.provider()
                 counts.append(provider)
             if "Hospital" in info:
@@ -830,28 +837,28 @@ class Record(object):
                 dates = self.algorithm.dates()
                 counts.append(dates)
             if "Fax" in info:
-                print("record fax")
+                #print("record fax")
                 fax = self.algorithm.fax()
                 counts.append(fax)
-            if "Serial" in info:
-                #print("record serialnum")
+            if "serial" in info:
+                #print("record serial num")
                 serial = self.algorithm.serial()
                 counts.append(serial)
-            elif "Allergies" in info:
+            if "Allergies" in info:
                #print("record allergies results")
                 list = "".join(info[9:]).strip()
                 list2 = list.strip("()").split("; ")
                 allergies = self.algorithm.allergies(list2)
                 counts.append(allergies)
-            elif "Device" in info:
+            if "Device" in info:
                 #print("record device identifiers")
                 device = self.algorithm.device()
                 counts.append(device)
-            elif "Internet" in info or "IP" in info:
+            if "Internet" in info or "IP" in info:
                 #print("record IP Address")
                 ip = self.algorithm.ip()
                 counts.append(ip)
-            elif "Medicaid" in info or "Health plan" in info:
+            if "Medicaid" in info or "Health plan" in info:
                 #print("record medicaid")
                 medicaid = self.algorithm.medicaid()
                 counts.append(medicaid)
