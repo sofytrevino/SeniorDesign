@@ -481,6 +481,7 @@ class SearchRecord:
                         if Medicaid:
                             found = True
                             Medicaid = Medicaid.group()  # Output: 1234 5678 9012 3456
+                            print(Medicaid)
                 if not Medicaid:
                     Medicaid = ""
 
@@ -681,13 +682,14 @@ class SearchRecord:
     #def medical record #
     def medical_record_number(self):
         count = 0
+        token = "*medical num*"
         try:
             with open(self.record, 'r') as file:
                 lines = file.readlines()
             with open(self.record, 'w') as file:
                 for line in lines:
                     if "Medical record number:" in line:
-                        line = re.sub(r'(Medical record number:\s*)[\w\-]+', r'\1[REDACTED]', line)
+                        line = re.sub(r'(Medical record number:\s*)[\w\-]+', r'\1*medical num*', line)
                         count += 1
                     file.write(line)
         except Exception as e:
@@ -836,7 +838,7 @@ class SearchRecord:
 
     #def unique id
     def unique_code(self):
-        print("unique_code() method was called!")  # Confirm function runs
+        #print("unique_code() method was called!")  # Confirm function runs
         count = 0
         try:
             with open(self.record, 'r') as file:
@@ -844,8 +846,8 @@ class SearchRecord:
             with open(self.record, 'w') as file:
                 for line in lines:
                     if "Code:" in line:
-                        print("Code line detected:", line.strip())
-                        line = re.sub(r'(Code:\s*)\d+', r'\1[REDACTED]', line)
+                        #print("Code line detected:", line.strip())
+                        line = re.sub(r'(Code:\s*)\d+', r'\1*ID*', line)
                         count += 1
                     file.write(line)
         except Exception as e:
@@ -937,7 +939,7 @@ class Record(object):
                 #print("record IP Address")
                 ip = self.algorithm.ip()
                 counts.append(ip)
-            if "Medicaid" in info or "Health plan" in info:
+            if "Medicaid" in info:
                 #print("record medicaid")
                 medicaid = self.algorithm.medicaid()
                 counts.append(medicaid)
@@ -945,6 +947,14 @@ class Record(object):
                 #print("record Acocunt")
                 account = self.algorithm.account()
                 counts.append(account)
+            if "Unique" in info or "identifying" in info:
+                #print("record unique identifying num")
+                uniqueID = self.algorithm.unique_code()
+                counts.append(uniqueID)
+            if "Medical" in info:
+                #print("record medical record num")
+                medical = self.algorithm.medical_record_number()
+                counts.append(medical)
             
 
 
