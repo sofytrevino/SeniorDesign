@@ -6,7 +6,7 @@ Date of Visit: *date*
 Address: *address*
 Phone: *phone*
 Email: *email*
-Health plan beneficiary number: 888-6765-1110
+Health plan beneficiary number: *Medicaid Account*
 Device identifier:*device id*
 Pacemaker serial numbers:*Serial Number*
 Pacemaker serial numbers:*Serial Number*

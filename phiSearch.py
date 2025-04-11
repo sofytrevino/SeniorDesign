@@ -897,6 +897,45 @@ class SearchRecord:
         except Exception as e:
             print(f"Error processing unique code: {e}")
         return count
+    
+    #health plan ID
+    def healthPlan(self):
+        healthPlan_count = 0
+        healthPlan_format = re.compile(r'\b\d{3}-\d{4}-\d{4}\b')
+        try:
+            with open(self.record, 'r+') as file:
+                #first identify the medicaid number we are looking for
+                #replace all occurrences of the medicaid number with the term "medicaid"
+                found = False
+                lines = file.readlines()
+                for line in lines:
+                    if not found:
+                        re.sub(healthPlan_format, "*HealthPlanID*", line, healthPlan_count)
+                        healthPlan=re.search(healthPlan_format, line)
+                        if healthPlan:
+                            found = True
+                            healthPlan = healthPlan.group()  # Output: 1234 5678 9012 3456
+                            #print(healthPlan)
+                if not healthPlan:
+                    healthPlan = ""
+
+                #loop through remainder of file and replace and count occurances that equal to Medicaid
+                if healthPlan != "":
+                        token = "*HealthPlanID*"
+                        updated_lines = []
+                        for line in lines:
+                            occurrences = line.count(healthPlan)
+                            if occurrences > 0:
+                                healthPlan_count+= 1
+                                line = line.replace(healthPlan, token)
+                            updated_lines.append(line)
+                        file.seek(0)
+                        file.truncate(0)
+                        file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return healthPlan_count
 
 
 
@@ -999,11 +1038,15 @@ class Record(object):
                 #print("record medical record num")
                 medical = self.algorithm.medical_record_number()
                 counts.append(medical)
-            elif "Certificate" in info or "license" in info or "Certificate number" in info or "license number" in info or "Certificate/license numbers" in info:
+            if "Certificate" in info or "license" in info or "Certificate number" in info or "license number" in info or "Certificate/license numbers" in info:
                 certificate = self.algorithm.certificate()
                 license = self.algorithm.license()
                 counts.append(certificate)
                 counts.append(license)
+            if "Health" in info:
+                #print("record health ID")
+                healthID = self.algorithm.healthPlan()
+                counts.append(healthID)
             
 
 
