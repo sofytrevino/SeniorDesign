@@ -14,7 +14,7 @@ Code:*ID*
 
 Provider: Dr. Benjamin Wright, MD
 Hospital Name: Greenfield Medical Center
-license number: MD77-786123
+license number: *License number*
 Fax number: *Fax Number*
 Address: *address*
 
@@ -191,9 +191,6 @@ Tolerating amitriptyline well with no significant side effects.
 Plan to continue current treatment and reassess in three months.
 
 Patient instructed to reach out if symptoms worsen or new concerns arise.
-
-e.
-
 
 e.
 

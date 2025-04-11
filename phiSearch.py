@@ -723,51 +723,32 @@ class SearchRecord:
         return certificateCount
     ''''''
 
-    #def license number
-    def license_num(self):
+    #new license
+    def n_license(self):
         licenseCount = 0
         try:
             with open(self.record, 'r+') as file:
-                #first find the account occurrence we will be looking for
-                licenseBank = {"license number:", "license number"}
-                keyword = False
-                License = ""
                 lines = file.readlines()
+                updated_lines = []
+                lnum = "license number:"
                 for line in lines:
-                    words = line.split()
-                    for word in words:
-                        if not keyword:
-                            if(word in licenseBank):
-                                parts = line.split()
-                                if len(parts) > 1:
-                                    License = " ".join(parts[2:]).strip() #try make 1
-                                    L_License = License.split()[-1]
-                                print(License)
-                                print(L_License)
-                                keyword = True
-                                break
-                               
-                #loop through remainder of file and replace and count occurances that equal to License
-                if License != "": #means have at least one CL value
-                    token = "*Certificate number*"
-                    updated_lines = []
-                    for line in lines:
-                        occurences =  line.count(License)
-                        occurences2 = line.count(License)
-                        if occurences > 0:
-                            licenseCount += occurences
-                            line = line.replace(License, token)
-                        if occurences2 > 0:
-                            licenseCount += occurences
-                            line = line.replace(License, token)
-                        updated_lines.append(line)
-                    file.seek(0)
-                    #file.truncate(0)
-                    file.writelines(updated_lines)
-               
+                    license = re.search('[A-Z]{2}[0-9]{2}-[0-9]{6}', line)
+                    #for cnum in line:
+                    if lnum in line:
+                        if license:
+                            license = license.group()
+                            licenseCount += 1
+                            line = line.replace(license, "*License number*")
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
+
         return licenseCount
+    ''''''
+
 
     #def serial num
     def serial(self):
@@ -1024,25 +1005,15 @@ class Record(object):
                 #print("record medical record num")
                 medical = self.algorithm.medical_record_number()
                 counts.append(medical)
-            elif "Certificate" in info:
+            elif "Certificate" in info or "license" in info or "Certificate number" in info or "license number" in info or "Certificate/license numbers" in info:
                 certificate = self.algorithm.n_certificate()
+                license = self.algorithm.n_license()
                 counts.append(certificate)
+                counts.append(license)
             
 
 
             """
-            elif "license number" in info:
-                #print("record Acocunt")
-                license = self.algorithm.license_num()
-                counts.append(license)
-            elif "Certificate number" in info:
-                #print("record Acocunt")
-                certificate = self.algorithm.certificate_num()
-                counts.append(certificate)
-            elif "Certificate number" in info or "license number" in info:
-                #print("record Acocunt")
-                cl = self.algorithm.certificate_license_num()
-                counts.append(cl)
             elif "Social worker" in info:
                 #print("record social worker")
                 socialW = self.algorithm.socialWorker()
