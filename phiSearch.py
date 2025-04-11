@@ -877,6 +877,38 @@ class SearchRecord:
         return ipCount
 
     #def biometric identifiers
+    def biometric(self):
+        biometricCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                lines = file.readlines()
+                updated_lines = []
+                biofound = False
+                biometricUsed = ""
+                for line in lines:
+                    # find where biometric is listed
+                    words = line.split()
+                    for word in words:
+                        if not bioFound:
+                            if (word == "Biometric"):
+                                biofound = True
+                                parts = line.split()
+                                biometricUsed = parts[1:]
+                                break
+                    
+                biometricListed = re.findall(biometricUsed, line)
+                    
+                for biomet in biometricListed:
+                    biometricCount += 1
+                    line = line.replace(biomet, "*BIOMETRIC*")
+                updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        return biometricCount
+
 
     #def full face images
 
@@ -1004,6 +1036,10 @@ class Record(object):
                 license = self.algorithm.license()
                 counts.append(certificate)
                 counts.append(license)
+            if "Biometric" in info:
+                #print("record biometric record")
+                biometricInfo = self.algorithm.biometric()
+                counts.append(biometricInfo)
             
 
 
