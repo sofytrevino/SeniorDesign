@@ -18,9 +18,9 @@ license number: MD77-786123
 Fax number: *Fax Number*
 Address: *address*
 
-Account: 4875 2198 6623 7741
+Account: *Account*
 Social Worker: *Social Worker*
-Certificate number:SW788a-7898
+Certificate number:*Certificate number*
 Health Insurance: BCBSX-We32445033
 Group no.: 614277
 Fax no.: *Fax Number*
