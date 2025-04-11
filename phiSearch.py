@@ -696,9 +696,8 @@ class SearchRecord:
             print(f"Error processing medical record number: {e}")
         return count
     
-    ''''''
-    #new certificate
-    def n_certificate(self):
+    #def certificate
+    def certificate(self):
         certificateCount = 0
         try:
             with open(self.record, 'r+') as file:
@@ -707,7 +706,6 @@ class SearchRecord:
                 cnum = "Certificate number:"
                 for line in lines:
                     certificate = re.search('[A-Z]{2}[0-9]{3}[a-z]-[0-9]{4}', line)
-                    #for cnum in line:
                     if cnum in line:
                         if certificate:
                             certificate = certificate.group()
@@ -721,10 +719,9 @@ class SearchRecord:
             print(f"Error: File '{self.record}' not found.")
 
         return certificateCount
-    ''''''
 
-    #new license
-    def n_license(self):
+    #def license
+    def license(self):
         licenseCount = 0
         try:
             with open(self.record, 'r+') as file:
@@ -733,7 +730,6 @@ class SearchRecord:
                 lnum = "license number:"
                 for line in lines:
                     license = re.search('[A-Z]{2}[0-9]{2}-[0-9]{6}', line)
-                    #for cnum in line:
                     if lnum in line:
                         if license:
                             license = license.group()
@@ -747,8 +743,6 @@ class SearchRecord:
             print(f"Error: File '{self.record}' not found.")
 
         return licenseCount
-    ''''''
-
 
     #def serial num
     def serial(self):
@@ -1006,8 +1000,8 @@ class Record(object):
                 medical = self.algorithm.medical_record_number()
                 counts.append(medical)
             elif "Certificate" in info or "license" in info or "Certificate number" in info or "license number" in info or "Certificate/license numbers" in info:
-                certificate = self.algorithm.n_certificate()
-                license = self.algorithm.n_license()
+                certificate = self.algorithm.certificate()
+                license = self.algorithm.license()
                 counts.append(certificate)
                 counts.append(license)
             
