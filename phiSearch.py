@@ -502,7 +502,7 @@ class SearchRecord:
 
         return medicaid_count
 
-    #generic account
+    #def account
     def account(self):
         accountCount = 0
         try:
@@ -541,7 +541,7 @@ class SearchRecord:
                             line = line.replace(L_Account, token)
                         updated_lines.append(line)
                     file.seek(0)
-                    #file.truncate(0)
+                    file.truncate(0)
                     file.writelines(updated_lines)
                 
         except FileNotFoundError:
@@ -680,9 +680,78 @@ class SearchRecord:
 
     #def medical record #
 
-    #def account numbers
+    ''''''
+    #new certificate
+    def n_certificate(self):
+        certificateCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                lines = file.readlines()
+                updated_lines = []
+                cnum = "Certificate number:"
+                for line in lines:
+                    certificate = re.search('[A-Z]{2}[0-9]{3}[a-z]-[0-9]{4}', line)
+                    #for cnum in line:
+                    if cnum in line:
+                        if certificate:
+                            certificate = certificate.group()
+                            certificateCount += 1
+                            line = line.replace(certificate, "*Certificate number*")
+                    updated_lines.append(line)
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
 
-    #def certificate/license num
+        return certificateCount
+    ''''''
+
+    #def license number
+    def license_num(self):
+        licenseCount = 0
+        try:
+            with open(self.record, 'r+') as file:
+                #first find the account occurrence we will be looking for
+                licenseBank = {"license number:", "license number"}
+                keyword = False
+                License = ""
+                lines = file.readlines()
+                for line in lines:
+                    words = line.split()
+                    for word in words:
+                        if not keyword:
+                            if(word in licenseBank):
+                                parts = line.split()
+                                if len(parts) > 1:
+                                    License = " ".join(parts[2:]).strip() #try make 1
+                                    L_License = License.split()[-1]
+                                print(License)
+                                print(L_License)
+                                keyword = True
+                                break
+                               
+                #loop through remainder of file and replace and count occurances that equal to License
+                if License != "": #means have at least one CL value
+                    token = "*Certificate number*"
+                    updated_lines = []
+                    for line in lines:
+                        occurences =  line.count(License)
+                        occurences2 = line.count(License)
+                        if occurences > 0:
+                            licenseCount += occurences
+                            line = line.replace(License, token)
+                        if occurences2 > 0:
+                            licenseCount += occurences
+                            line = line.replace(License, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    #file.truncate(0)
+                    file.writelines(updated_lines)
+               
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+        return licenseCount
 
     #def serial num
     def serial(self):
@@ -836,7 +905,7 @@ class Record(object):
         inputs = self.input
         counts = []
         #loop through self.input and call corresponding functions in Search Record
-        #print("inputs: ", inputs)
+        #print("inputs: ", inputs)14
         for info in inputs:
             if "Name" in info or "Patient" in info:
                 #print("record name")
@@ -916,10 +985,26 @@ class Record(object):
                 #print("record Acocunt")
                 account = self.algorithm.account()
                 counts.append(account)
+            elif "Certificate" in info:
+                certificate = self.algorithm.n_certificate()
+                counts.append(certificate)
             
 
 
-            """elif "Social worker" in info:
+            """
+            elif "license number" in info:
+                #print("record Acocunt")
+                license = self.algorithm.license_num()
+                counts.append(license)
+            elif "Certificate number" in info:
+                #print("record Acocunt")
+                certificate = self.algorithm.certificate_num()
+                counts.append(certificate)
+            elif "Certificate number" in info or "license number" in info:
+                #print("record Acocunt")
+                cl = self.algorithm.certificate_license_num()
+                counts.append(cl)
+            elif "Social worker" in info:
                 #print("record social worker")
                 socialW = self.algorithm.socialWorker()
                 counts.appened(socialW)
