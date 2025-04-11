@@ -1,6 +1,6 @@
 Patient Name: *name*
 Date of Birth: *DoB*
-Medical record number:TXB4459-BS34334
+Medical record number:*medical num*
 SSN: *SSN*
 Date of Visit: *date*
 Address: *address*
@@ -10,7 +10,7 @@ Health plan beneficiary number: 888-6765-1110
 Device identifier:*device id*
 Pacemaker serial numbers:*Serial Number*
 Pacemaker serial numbers:*Serial Number*
-Code:772980014
+Code:*ID*
 
 Provider: Dr. Benjamin Wright, MD
 Hospital Name: Greenfield Medical Center
@@ -191,6 +191,9 @@ Tolerating amitriptyline well with no significant side effects.
 Plan to continue current treatment and reassess in three months.
 
 Patient instructed to reach out if symptoms worsen or new concerns arise.
+
+e.
+
 
 e.
 
