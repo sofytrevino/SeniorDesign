@@ -881,32 +881,36 @@ class SearchRecord:
         biometricCount = 0
         try:
             with open(self.record, 'r+') as file:
+                # Find the social worker's name
                 lines = file.readlines()
-                updated_lines = []
-                biofound = False
-                biometricUsed = ""
+                keyword = False
+                found = False
+                biometric = ""
                 for line in lines:
-                    # find where biometric is listed
-                    words = line.split()
-                    for word in words:
-                        if not bioFound:
-                            if (word == "Biometric"):
-                                biofound = True
-                                parts = line.split()
-                                biometricUsed = parts[1:]
-                                break
-                    
-                biometricListed = re.findall(biometricUsed, line)
-                    
-                for biomet in biometricListed:
-                    biometricCount += 1
-                    line = line.replace(biomet, "*BIOMETRIC*")
-                updated_lines.append(line)
-                file.seek(0)
-                file.truncate(0)
-                file.writelines(updated_lines)
+                    if not found and ("Biometric:" in line or "biometric:" in line):
+                        parts = line.split(":", 1)
+                        if len(parts) > 1:
+                            biometric = parts[1].strip()
+                            found = True
+                            break
+                
+                # Replace occurrences of the social worker's name
+                if biometric:
+                    token = "*biometrics*"
+                    updated_lines = []
+                    for line in lines:
+                        occurrences = line.count(biometric)
+                        if occurrences > 0:
+                            biometricCount += occurrences
+                            line = line.replace(biometric, token)
+                        updated_lines.append(line)
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(updated_lines)
+
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
+            
         return biometricCount
 
 
