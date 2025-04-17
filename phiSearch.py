@@ -49,6 +49,7 @@ class SearchRecord:
 
     def __init__(self, record):
         self.record = record
+        self.retrievedWords = {}
         #self.outputFile = "JMS2.txt"
         
     #functions should return the number of occurances found of each type
@@ -81,6 +82,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Name
                 if Name != "":
                     token = "*name*"
+                    self.retrievedWords["*name*"] = Name
                     updated_lines = []
                     for Name in namesFound:
                         for line in lines:
@@ -125,7 +127,7 @@ class SearchRecord:
                             #add the following words after address to the address String object
                             if "Address:" in line or "address:" in line:
                                 Address = line.split(":", 1)[1].strip()
-                            addressFound.append(Address)
+                                addressFound.append(Address)
                             #print(Address)
                                 
                 
@@ -133,14 +135,15 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Email
                 if Address != "":
                         token = "*address*"
+                        address_index = 0
                         updated_lines = []
                         for line in lines:
                             for Address in addressFound:
                                 if Address in line:
-                                    occurrences = line.count(Address)
-                                    if occurrences > 0:
-                                        addressCount+= 1
-                                        line = line.replace(Address, token)
+                                    token = f"*address{address_index}*"
+                                    self.retrievedWords[token] = Address
+                                    line = line.replace(Address, token)
+                                    address_index += 1
                             updated_lines.append(line)
                         file.seek(0)
                         file.truncate(0)
@@ -179,6 +182,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Date Of Birth
                 if DoB != "":
                     token = "*DoB*"
+                    self.retrievedWords["*DoB*"] = DoB
                     updated_lines = []
                     for line in lines:
                         occurences = line.count(DoB)
@@ -225,6 +229,7 @@ class SearchRecord:
                 if SSN != "":
                     SSN = str(SSN)
                     token = "*SSN*"
+                    self.retrievedWords["*SSN*"] = SSN
                     updated_lines = []
                     for line in lines:
                         occurrences = line.count(SSN)
@@ -268,6 +273,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
                 if Phone != "":
                         token = "*phone*"
+                        self.retrievedWords["*phone*"] = Phone
                         updated_lines = []
                         for line in lines:
                             occurrences = line.count(Phone)
@@ -312,6 +318,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Email
                 if Email != "":
                         token = "*email*"
+                        self.retrievedWords["*email*"] = Email
                         updated_lines = []
                         for line in lines:
                             for Email in emailFound:
@@ -359,6 +366,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Name
                 if Provider != "":
                     token = "*Provider*"
+                    self.retrievedWords["*Provider*"] = Provider
                     updated_lines = []
                     for line in lines:
                         occurences =  line.count(Provider)
@@ -408,6 +416,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Name
                 if Hospital != "":
                     token = "*HospitalName*"
+                    self.retrievedWords["*HospitalName*"] = Hospital
                     updated_lines = []
                     for line in lines:
                         occurences =  line.count(Hospital)
@@ -488,6 +497,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Medicaid
                 if Medicaid != "":
                         token = "*Medicaid Account*"
+                        self.retrievedWords["*Medicaid Account*"] = Medicaid
                         updated_lines = []
                         for line in lines:
                             occurrences = line.count(Medicaid)
@@ -530,6 +540,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Account
                 if Account != "":
                     token = "*Account*"
+                    self.retrievedWords["*Account*"] = Account
                     updated_lines = []
                     for line in lines:
                         occurences =  line.count(Account)
@@ -637,6 +648,7 @@ class SearchRecord:
                     # Replace occurrences of the social worker's name
                     if SocialWorker:
                         token = "*Social Worker*"
+                        self.retrievedWords["*Social Worker*"] = SocialWorker
                         updated_lines = []
                         for line in lines:
                             occurrences = line.count(SocialWorker)
@@ -751,15 +763,15 @@ class SearchRecord:
             with open(self.record, 'r+') as file:
                 lines = file.readlines()
                 updated_lines = []
-                #pattern = re.compile(r'(Serial(?: Number)?:\s*)([A-Za-z0-9\-]+)', re.IGNORECASE)
+                # Pattern to match serial numbers
                 pattern = re.compile(r'\b(?:serial\s*number(?:s)?|serials?|s/n)\s*:?\s*([A-Za-z0-9_\-\/]+)', re.IGNORECASE)
                 for line in lines:
                     matches = pattern.findall(line)
                     for serial in matches:
                         serialCount += 1
-                        #print(serial)
+                        # Replace the serial number with the token
                         line = line.replace(serial, "*Serial Number*")
-                        updated_lines.append(line)
+                    # Append the processed line only once
                     updated_lines.append(line)
                 file.seek(0)
                 file.truncate(0)
@@ -794,7 +806,8 @@ class SearchRecord:
                                 break
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
                 if deviceId != "":
-                        token = "*device id*"
+                        token = "*deviceID*"
+                        self.retrievedWords["*deviceID*"] = deviceId
                         updated_lines = []
                         for line in lines:
                             occurrences = line.count(deviceId)
@@ -859,6 +872,7 @@ class SearchRecord:
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
                 if ipAddress != "":
                         token = "*IP Address*"
+                        self.retrievedWords["*IP Address*"] = ipAddress
                         updated_lines = []
                         for line in lines:
                             occurrences = line.count(ipAddress)
@@ -897,6 +911,7 @@ class SearchRecord:
                 # Replace occurrences of the social worker's name
                 if biometric:
                     token = "*biometrics*"
+                    self.retrievedWords["*biometrics*"] = biometric
                     updated_lines = []
                     for line in lines:
                         occurrences = line.count(biometric)
@@ -1097,27 +1112,66 @@ class Record(object):
 
 
 def main():
-
-    #ensure command-line arguments
     if len(sys.argv) < 3:
-        print("Missing input file and/or record file")
+        print("Usage:")
+        print("  For deidentify: python phiSearch.py deidentify PHIfile.txt Recordfile.txt")
+        print("  For reidentify: python phiSearch.py reidentify retrievedwords.txt deidentifiedFile.txt")
         sys.exit(1)
-    inputFile = sys.argv[1]
-    recordFile = sys.argv[2]
-    outputFile = "NewJMS.txt"
 
-    #copy input file to output file
-    with open(recordFile, 'r') as source, open(outputFile, "w") as destination:
-        destination.write(source.read())
+
+    mode = sys.argv[1]
+
+    if mode == "deidentify":
+        inputFile = sys.argv[2]
+        recordFile = sys.argv[3]
+        outputFile = "NewJMS.txt"
+
+        with open(recordFile, 'r') as source, open(outputFile, "w") as destination:
+            destination.write(source.read())
+
+        parseInfo = Parsing(inputFile)
+        infoList = parseInfo.parse()
+
+        search = Record(infoList, outputFile)
+        found = search.find()
+
+        retrievedWordsFile = "retrievedwords.txt"
+        with open(retrievedWordsFile, 'w') as f:
+            for token, word in search.algorithm.retrievedWords.items():
+                f.write(f"{token} {word}\n")
+
+        print("PHI Final Count: ", found)
     
+    elif mode == "reidentify":
+        retrievedWordsFile = sys.argv[2]
+        deidentifiedFile = sys.argv[3]
+        reidentifiedFile = "Reidentified.txt"
 
-    parseInfo = Parsing(inputFile)
-    infoList = parseInfo.parse()
-    #print("info list: ", infoList)
-    search = Record(infoList, outputFile)
-    found = search.find()
-    print("PHI Final Count: ", found)
+        reident_map = {}
+        with open(retrievedWordsFile, 'r') as f:
+            for line in f:
+                parts = line.strip().split(' ', 1)
+                if len(parts) == 2:
+                    token, realword = parts
+                    reident_map[token] = realword
+
+        with open(deidentifiedFile, 'r') as file:
+            content = file.read()
+
+        for token, realword in reident_map.items():
+            content = content.replace(token, realword)
+
+        with open(reidentifiedFile, 'w') as file:
+            file.write(content)
+
+        print(f"Reidentification complete output written to {reidentifiedFile}")
+
+    else:
+        print("Please use 'deidentify' or 'reidentify'")
 
    
 if __name__ == "__main__":
     main()
+
+# python phiSearch.py deidentify PHI3.txt "ehr EC 3 .txt"
+# python phiSearch.py reidentify retrievedwords.txt NewJMS.txt
