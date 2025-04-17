@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De-identification program</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+<head>
+
+<body>
+
+    <section class="firstsection">
+        <div class="box-main">
+            <div class="first-half">
+                <h1 class="text-big" id="web"> De-identification
+                </h1>
+                <p class="text-small">
+                    First submit a PHI file that contains the information we are looking for. Next submit a medical record
+                    to de-identify.
+                </p>
+            </div>
+        </div>
+        <nav class="navbar">
+            <div class="insert-nav">
+                <form action ="/phiSearch.py" method="get">
+                    <label for="fileinput">Enter PHI file:</label><br>
+                    <input type="text" name="fileinput" id="fileinput" multiple>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            <div class="insert-nav">
+                <form action ="/phiSearch.py" method="get">
+                    <label for="medicalfile">Enter medical file:</label><br>
+                    <input type="text" name="medicalfile" id="medicalfile" multiple>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+        </nav>
+    </section>
+
+
+<!--Connect to input_connection-->
+<script type="py" src="./venv/input_connection.py" config="./config.json"></script>
+</body>
+
+</html>

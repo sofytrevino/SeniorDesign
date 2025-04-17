@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, render_template, request
 #import sys
 #import os
 import subprocess
@@ -15,7 +15,11 @@ import phiSearch
 
 #Subprocess method
 app = Flask(__name__)
+@app.route('/')
 @app.route('/submit', methods=['POST'])
+def get_started():
+    return render_template('index.html')
+
 def submit_form():
     #get file names from HTML
     fileinput = request.form.get('fileinput')
@@ -35,7 +39,7 @@ def submit_form():
 
 def run_phiSearch(script_path, *args):
     # Process form data here
-    command = ['python', "C:/Users/ogmor/Documents/Spring 25/CS Project/SeniorDesign/SeniorDesign-1/phiSearch.py", *args]
+    command = ['python', script_path, *args]
     result = subprocess.run(command, capture_output=True, text=True)
     return result  
 
