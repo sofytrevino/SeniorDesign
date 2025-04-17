@@ -871,8 +871,8 @@ class SearchRecord:
                                 break
                 #loop through remainder of file and replace and count occurances that equal to Phone Number
                 if ipAddress != "":
-                        token = "*IP Address*"
-                        self.retrievedWords["*IP Address*"] = ipAddress
+                        token = "*IPAddress*"
+                        self.retrievedWords["*IPAddress*"] = ipAddress
                         updated_lines = []
                         for line in lines:
                             occurrences = line.count(ipAddress)
