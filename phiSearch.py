@@ -609,19 +609,33 @@ class SearchRecord:
         datesCount = 0
         try:
             with open(self.record, 'r+') as file:
-                #first find the date we will be looking for
                 lines = file.readlines()
                 updated_lines = []
+                date_pattern = r'\b\d{1,2}/\d{1,2}/\d{4}\b'
+                dates_found = set()
+
+                # First: collect all unique dates
                 for line in lines:
-                    # Updated regex to match dates in MM/DD/YYYY format
-                    dates = re.findall(r'\b\d{1,2}/\d{1,2}/\d{4}\b', line)
-                    for date in dates:
-                        datesCount += 1
-                        line = line.replace(date, "*date*")
+                    matches = re.findall(date_pattern, line)
+                    for match in matches:
+                        dates_found.add(match)
+
+                # Then: replace and track them
+                for line in lines:
+                    for i, date in enumerate(dates_found):
+                        token = f"*Date{i}*"
+                        if token not in self.retrievedWords:
+                            self.retrievedWords[token] = date
+                        count = line.count(date)
+                        if count > 0:
+                            datesCount += count
+                            line = line.replace(date, token)
                     updated_lines.append(line)
+
                 file.seek(0)
                 file.truncate(0)
                 file.writelines(updated_lines)
+
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
         return datesCount
@@ -693,20 +707,40 @@ class SearchRecord:
 
     #def medical record #
     def medical_record_number(self):
-        count = 0
-        token = "*medical num*"
+        mrnCount = 0
         try:
-            with open(self.record, 'r') as file:
+            with open(self.record, 'r+') as file:
                 lines = file.readlines()
-            with open(self.record, 'w') as file:
+                updated_lines = []
+                mrn_pattern = r'\bTX[A-Z0-9]{4,}-[A-Z0-9]{4,}\b'  # matches formats like TXB4459-BS34334
+                mrns_found = set()
+
+                # Find all MRNs in file
                 for line in lines:
-                    if "Medical record number:" in line:
-                        line = re.sub(r'(Medical record number:\s*)[\w\-]+', r'\1*medical num*', line)
-                        count += 1
-                    file.write(line)
-        except Exception as e:
-            print(f"Error processing medical record number: {e}")
-        return count
+                    matches = re.findall(mrn_pattern, line)
+                    for match in matches:
+                        mrns_found.add(match)
+
+                # Replace MRNs with tokens and build mapping
+                for line in lines:
+                    for i, mrn in enumerate(mrns_found):
+                        token = f"*MedicalRecordNumber*"
+                        if token not in self.retrievedWords:
+                            self.retrievedWords[token] = mrn
+                        count = line.count(mrn)
+                        if count > 0:
+                            mrnCount += count
+                            line = line.replace(mrn, token)
+                    updated_lines.append(line)
+
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return mrnCount
     
     #def certificate
     def certificate(self):
@@ -739,18 +773,32 @@ class SearchRecord:
             with open(self.record, 'r+') as file:
                 lines = file.readlines()
                 updated_lines = []
-                lnum = "license number:"
+
+                license_found = set()
+                license_pattern = r'license number:\s*[A-Z]{2,}\d{2,}-\d{3,}'  # e.g., license number: MD77-786123
+
                 for line in lines:
-                    license = re.search('[A-Z]{2}[0-9]{2}-[0-9]{6}', line)
-                    if lnum in line:
-                        if license:
-                            license = license.group()
-                            licenseCount += 1
-                            line = line.replace(license, "*License number*")
+                    matches = re.findall(license_pattern, line, flags=re.IGNORECASE)
+                    for match in matches:
+                        # Extract just the license ID part after the colon
+                        license_id = match.split(":")[1].strip()
+                        license_found.add(license_id)
+
+                for line in lines:
+                    for i, lic in enumerate(license_found):
+                        token = f"*LicenseNumber*"
+                        if token not in self.retrievedWords:
+                            self.retrievedWords[token] = lic
+                        count = line.count(lic)
+                        if count > 0:
+                            licenseCount += count
+                            line = line.replace(lic, token)
                     updated_lines.append(line)
+
                 file.seek(0)
                 file.truncate(0)
                 file.writelines(updated_lines)
+
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
 
@@ -763,19 +811,31 @@ class SearchRecord:
             with open(self.record, 'r+') as file:
                 lines = file.readlines()
                 updated_lines = []
-                # Pattern to match serial numbers
-                pattern = re.compile(r'\b(?:serial\s*number(?:s)?|serials?|s/n)\s*:?\s*([A-Za-z0-9_\-\/]+)', re.IGNORECASE)
+
+                # Match serial numbers like B1001-7786432 or SN-00112233
+                serial_pattern = r'\b[A-Z]{1,5}\d{2,}-\d{4,}\b'
+                serials_found = set()
+
                 for line in lines:
-                    matches = pattern.findall(line)
-                    for serial in matches:
-                        serialCount += 1
-                        # Replace the serial number with the token
-                        line = line.replace(serial, "*Serial Number*")
-                    # Append the processed line only once
+                    matches = re.findall(serial_pattern, line)
+                    for match in matches:
+                        serials_found.add(match)
+
+                for line in lines:
+                    for i, serial in enumerate(serials_found):
+                        token = f"*SerialNumber*"
+                        if token not in self.retrievedWords:
+                            self.retrievedWords[token] = serial
+                        count = line.count(serial)
+                        if count > 0:
+                            serialCount += count
+                            line = line.replace(serial, token)
                     updated_lines.append(line)
+
                 file.seek(0)
                 file.truncate(0)
                 file.writelines(updated_lines)
+
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
 
@@ -933,56 +993,73 @@ class SearchRecord:
 
     #def unique id
     def unique_code(self):
-        #print("unique_code() method was called!")  # Confirm function runs
-        count = 0
+        codeCount = 0
         try:
-            with open(self.record, 'r') as file:
+            with open(self.record, 'r+') as file:
                 lines = file.readlines()
-            with open(self.record, 'w') as file:
+                updated_lines = []
+
+                codes_found = set()
+                code_pattern = r'Code:\s*\d{5,}'  # Matches "Code:772980014"
+
                 for line in lines:
-                    if "Code:" in line:
-                        #print("Code line detected:", line.strip())
-                        line = re.sub(r'(Code:\s*)\d+', r'\1*ID*', line)
-                        count += 1
-                    file.write(line)
-        except Exception as e:
-            print(f"Error processing unique code: {e}")
-        return count
+                    matches = re.findall(code_pattern, line)
+                    for match in matches:
+                        # Extract just the numeric part (after "Code:")
+                        code_number = match.split(":")[1].strip()
+                        codes_found.add(code_number)
+
+                for line in lines:
+                    for i, code in enumerate(codes_found):
+                        token = f"*Code*"
+                        if token not in self.retrievedWords:
+                            self.retrievedWords[token] = code
+                        count = line.count(code)
+                        if count > 0:
+                            codeCount += count
+                            line = line.replace(code, token)
+                    updated_lines.append(line)
+
+                file.seek(0)
+                file.truncate(0)
+                file.writelines(updated_lines)
+
+        except FileNotFoundError:
+            print(f"Error: File '{self.record}' not found.")
+
+        return codeCount
     
     #health plan ID
     def healthPlan(self):
         healthPlan_count = 0
-        healthPlan_format = re.compile(r'\b\d{3}-\d{4}-\d{4}\b')
+        healthPlan_pattern = re.compile(r'\b\d{3}-\d{4}-\d{4}\b')  # matches 888-6765-1110 format
         try:
             with open(self.record, 'r+') as file:
-                #first identify the medicaid number we are looking for
-                #replace all occurrences of the medicaid number with the term "medicaid"
-                found = False
                 lines = file.readlines()
-                for line in lines:
-                    if not found:
-                        re.sub(healthPlan_format, "*HealthPlanID*", line, healthPlan_count)
-                        healthPlan=re.search(healthPlan_format, line)
-                        if healthPlan:
-                            found = True
-                            healthPlan = healthPlan.group()  # Output: 1234 5678 9012 3456
-                            #print(healthPlan)
-                if not healthPlan:
-                    healthPlan = ""
+                updated_lines = []
+                found_health_plan = None
 
-                #loop through remainder of file and replace and count occurances that equal to Medicaid
-                if healthPlan != "":
-                        token = "*HealthPlanID*"
-                        updated_lines = []
-                        for line in lines:
-                            occurrences = line.count(healthPlan)
-                            if occurrences > 0:
-                                healthPlan_count+= 1
-                                line = line.replace(healthPlan, token)
-                            updated_lines.append(line)
-                        file.seek(0)
-                        file.truncate(0)
-                        file.writelines(updated_lines)
+                for line in lines:
+                    match = healthPlan_pattern.search(line)
+                    if match:
+                        found_health_plan = match.group()
+                        break  # Only redact the first one (based on your logic)
+
+                if found_health_plan:
+                    token = "*HealthPlanID*"
+                    self.retrievedWords[token] = found_health_plan  # Store for re-identification
+
+                    for line in lines:
+                        count = line.count(found_health_plan)
+                        if count > 0:
+                            healthPlan_count += count
+                            line = line.replace(found_health_plan, token)
+                        updated_lines.append(line)
+
+                    file.seek(0)
+                    file.truncate(0)
+                    file.writelines(updated_lines)
+
         except FileNotFoundError:
             print(f"Error: File '{self.record}' not found.")
 
